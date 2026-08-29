@@ -1,331 +1,401 @@
 <!doctype html>
 <html lang="es">
 <head>
-  <meta charset="utf-8">
+<meta charset="utf-8">
 
-  <meta
-    name="viewport"
-    content="width=device-width,initial-scale=1,viewport-fit=cover"
-  >
+<meta
+  name="viewport"
+  content="width=device-width,initial-scale=1,viewport-fit=cover"
+>
 
-  <title>Moscow ↔ Samara</title>
+<title>Moscow ↔ Samara</title>
 
-  <style>
-    * {
-      box-sizing: border-box;
-    }
+<style>
+* {
+  box-sizing: border-box;
+}
 
-    :root {
-      font-family:
-        Inter,
-        system-ui,
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        sans-serif;
+:root {
+  font-family:
+    Inter,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
 
-      background: #08090b;
-      color: #f4f4f4;
-    }
+  color: #f5f5f5;
+  background: #08090b;
+}
 
-    body {
-      margin: 0;
-      min-height: 100vh;
-      background:
-        radial-gradient(circle at 50% -10%, #252830 0, transparent 35%),
-        #08090b;
-    }
+body {
+  margin: 0;
+  min-height: 100vh;
 
-    button,
-    input {
-      font: inherit;
-    }
+  background:
+    radial-gradient(
+      circle at 50% -10%,
+      #292c35 0,
+      transparent 35%
+    ),
+    #08090b;
+}
 
-    button {
-      cursor: pointer;
-    }
+button,
+input {
+  font: inherit;
+}
 
-    .app {
-      max-width: 1100px;
-      margin: auto;
+button {
+  cursor: pointer;
+}
 
-      padding:
-        max(20px, env(safe-area-inset-top))
-        16px
-        max(30px, env(safe-area-inset-bottom));
-    }
+.app {
+  width: min(1100px, 100%);
+  margin: auto;
 
-    header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 16px;
-      margin-bottom: 20px;
-    }
+  padding:
+    max(20px, env(safe-area-inset-top))
+    16px
+    max(32px, env(safe-area-inset-bottom));
+}
 
-    .eyebrow {
-      font-size: 11px;
-      letter-spacing: .16em;
-      opacity: .5;
-    }
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 18px;
 
-    h1 {
-      margin: 4px 0 0;
-      font-size: clamp(25px, 6vw, 40px);
-    }
+  margin-bottom: 20px;
+}
 
-    .presence {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
+.eyebrow {
+  opacity: .5;
 
-    .person {
-      padding: 8px 11px;
-      border: 1px solid #303239;
-      border-radius: 999px;
-      opacity: .45;
-      font-size: 13px;
-    }
+  font-size: 11px;
+  letter-spacing: .18em;
+}
 
-    .person.online {
-      opacity: 1;
-      border-color: #777c86;
-    }
+h1 {
+  margin: 4px 0 0;
 
-    .person.online::before {
-      content: "●";
-      margin-right: 6px;
-    }
+  font-size:
+    clamp(26px, 6vw, 42px);
+}
 
-    nav {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 8px;
-      margin-bottom: 18px;
-    }
+.presence {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
 
-    nav button {
-      min-height: 48px;
-      padding: 10px;
-      border: 1px solid #292c32;
-      border-radius: 13px;
-      background: #14161a;
-      color: white;
-    }
+.person {
+  padding: 8px 11px;
 
-    nav button.active {
-      background: white;
-      color: #111;
-      font-weight: 700;
-    }
+  border: 1px solid #30333b;
+  border-radius: 999px;
 
-    .panel {
-      display: none;
-    }
+  opacity: .4;
 
-    .panel.active {
-      display: block;
-    }
+  font-size: 13px;
+}
 
-    .videoShell {
-      position: relative;
-      width: 100%;
-      aspect-ratio: 16 / 9;
-      overflow: hidden;
-      border: 1px solid #292c32;
-      border-radius: 18px;
-      background: #000;
-    }
+.person.online {
+  opacity: 1;
+  border-color: #747985;
+}
 
-    #youtubePlayer,
-    #youtubePlayer iframe,
-    #screenVideo,
-    #remoteMediaVideo {
-      display: block;
-      width: 100%;
-      height: 100%;
-    }
+.person.online::before {
+  content: "●";
+  margin-right: 6px;
+}
 
-    #screenVideo,
-    #remoteMediaVideo {
-      object-fit: contain;
-      background: black;
-    }
+nav {
+  display: grid;
+  grid-template-columns:
+    repeat(3, 1fr);
 
-    .controls {
-      display: flex;
-      gap: 8px;
-      margin-top: 14px;
-    }
+  gap: 8px;
 
-    .controls input {
-      flex: 1;
-      min-width: 0;
+  margin-bottom: 18px;
+}
 
-      padding: 13px 14px;
+nav button {
+  min-height: 48px;
 
-      border: 1px solid #303239;
-      border-radius: 12px;
+  padding: 10px;
 
-      background: #121418;
-      color: white;
-    }
+  border: 1px solid #2c2f36;
+  border-radius: 13px;
 
-    .primary,
-    .secondary {
-      min-height: 46px;
-      padding: 11px 16px;
-      border-radius: 12px;
-    }
+  color: white;
+  background: #14161a;
+}
 
-    .primary {
-      border: 0;
-      background: white;
-      color: #111;
-      font-weight: 700;
-    }
+nav button.active {
+  color: #111;
+  background: #fff;
 
-    .secondary {
-      border: 1px solid #303239;
-      background: #15171b;
-      color: white;
-    }
+  font-weight: 700;
+}
 
-    .secondary.active {
-      background: white;
-      color: #111;
-      font-weight: 700;
-    }
+.panel {
+  display: none;
+}
 
-    .buttonRow {
-      display: flex;
-      gap: 9px;
-      margin-top: 14px;
-      flex-wrap: wrap;
-    }
+.panel.active {
+  display: block;
+}
 
-    .status {
-      min-height: 22px;
-      margin-top: 12px;
-      font-size: 13px;
-      opacity: .68;
-    }
+.videoShell {
+  position: relative;
 
-    .hint {
-      margin: 12px 0;
-      padding: 12px 14px;
+  width: 100%;
+  aspect-ratio: 16 / 9;
 
-      border: 1px solid #303239;
-      border-radius: 13px;
+  overflow: hidden;
 
-      background: #14161a;
+  border: 1px solid #292c32;
+  border-radius: 18px;
 
-      font-size: 13px;
-      line-height: 1.45;
-    }
+  background: #000;
+}
 
-    .callStage {
-      position: relative;
-    }
+#youtubePlayer,
+#youtubePlayer iframe,
+#screenVideo,
+#remoteMediaVideo {
+  width: 100%;
+  height: 100%;
+}
 
-    .localPreview {
-      position: absolute;
-      right: 12px;
-      bottom: 12px;
+#screenVideo,
+#remoteMediaVideo {
+  display: block;
 
-      width: min(28%, 180px);
-      aspect-ratio: 3 / 4;
+  object-fit: contain;
 
-      overflow: hidden;
+  background: black;
+}
 
-      border: 2px solid rgba(255,255,255,.75);
-      border-radius: 15px;
+.controls {
+  display: flex;
+  gap: 8px;
 
-      background: #111;
+  margin-top: 14px;
+}
 
-      box-shadow: 0 10px 40px rgba(0,0,0,.45);
+.controls input {
+  flex: 1;
 
-      z-index: 3;
-    }
+  min-width: 0;
 
-    #localMediaVideo {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transform: scaleX(-1);
-    }
+  padding: 13px 14px;
 
-    .emptyCall {
-      position: absolute;
-      inset: 0;
+  border: 1px solid #30333b;
+  border-radius: 12px;
 
-      display: flex;
-      justify-content: center;
-      align-items: center;
+  color: white;
+  background: #121418;
+}
 
-      padding: 30px;
+.buttonRow {
+  display: flex;
+  gap: 9px;
+  flex-wrap: wrap;
 
-      text-align: center;
-      opacity: .55;
-      pointer-events: none;
-    }
+  margin-top: 14px;
+}
 
-    .rolePicker {
-      display: none;
-      max-width: 420px;
-      margin: 100px auto;
-      padding: 20px;
-      text-align: center;
-    }
+.primary,
+.secondary {
+  min-height: 46px;
 
-    .rolePicker button {
-      display: block;
-      width: 100%;
-      margin-top: 12px;
-      padding: 15px;
-      border: 0;
-      border-radius: 13px;
-      font-weight: 700;
-    }
+  padding: 11px 16px;
 
-    @media (max-width: 650px) {
-      header {
-        display: block;
-      }
+  border-radius: 12px;
+}
 
-      .presence {
-        margin-top: 14px;
-      }
+.primary {
+  border: 0;
 
-      nav {
-        grid-template-columns: 1fr;
-      }
+  color: #111;
+  background: white;
 
-      .controls {
-        flex-direction: column;
-      }
+  font-weight: 700;
+}
 
-      .controls button {
-        width: 100%;
-      }
+.secondary {
+  border: 1px solid #34373f;
 
-      .buttonRow {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-      }
+  color: white;
+  background: #15171b;
+}
 
-      .buttonRow button {
-        width: 100%;
-      }
+.secondary.active {
+  color: #111;
+  background: white;
 
-      .localPreview {
-        width: 27%;
-        right: 8px;
-        bottom: 8px;
-      }
-    }
-  </style>
+  font-weight: 700;
+}
+
+button:disabled {
+  opacity: .4;
+  cursor: default;
+}
+
+.status {
+  min-height: 24px;
+
+  margin-top: 12px;
+
+  opacity: .7;
+
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.debug {
+  margin-top: 8px;
+
+  opacity: .45;
+
+  font-size: 11px;
+  line-height: 1.5;
+
+  word-break: break-word;
+}
+
+.hint {
+  margin-bottom: 12px;
+
+  padding: 12px 14px;
+
+  border: 1px solid #30333b;
+  border-radius: 13px;
+
+  color: #ddd;
+  background: #14161a;
+
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.callStage {
+  position: relative;
+}
+
+.localPreview {
+  position: absolute;
+
+  right: 12px;
+  bottom: 12px;
+
+  width: min(28%, 180px);
+  aspect-ratio: 3 / 4;
+
+  overflow: hidden;
+
+  border: 2px solid rgba(255,255,255,.8);
+  border-radius: 15px;
+
+  background: #111;
+
+  box-shadow:
+    0 12px 40px rgba(0,0,0,.5);
+
+  z-index: 4;
+}
+
+#localMediaVideo {
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+
+  transform: scaleX(-1);
+}
+
+.emptyCall {
+  position: absolute;
+  inset: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 30px;
+
+  text-align: center;
+
+  opacity: .5;
+
+  pointer-events: none;
+}
+
+.rolePicker {
+  display: none;
+
+  width: min(420px, calc(100% - 32px));
+
+  margin: 100px auto;
+
+  text-align: center;
+}
+
+.rolePicker button {
+  display: block;
+
+  width: 100%;
+
+  margin-top: 12px;
+
+  padding: 15px;
+
+  border: 0;
+  border-radius: 13px;
+
+  font-weight: 700;
+}
+
+@media (max-width: 650px) {
+  header {
+    display: block;
+  }
+
+  .presence {
+    margin-top: 14px;
+  }
+
+  nav {
+    grid-template-columns: 1fr;
+  }
+
+  .controls {
+    flex-direction: column;
+  }
+
+  .controls button {
+    width: 100%;
+  }
+
+  .buttonRow {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .buttonRow button {
+    width: 100%;
+  }
+
+  .localPreview {
+    right: 8px;
+    bottom: 8px;
+
+    width: 28%;
+  }
+}
+</style>
 </head>
 
 <body>
@@ -347,244 +417,285 @@
 
 <main id="app" class="app" hidden>
 
-  <header>
+<header>
 
-    <div>
-      <div class="eyebrow">
-        PRIVATE ROOM
-      </div>
+  <div>
 
-      <h1>
-        Moscow ↔ Samara
-      </h1>
+    <div class="eyebrow">
+      PRIVATE ROOM
     </div>
 
-    <div class="presence">
+    <h1>
+      Moscow ↔ Samara
+    </h1>
 
-      <span id="neburPresence" class="person">
-        Nebur
-      </span>
-
-      <span id="natalyaPresence" class="person">
-        Наталья
-      </span>
-
-    </div>
-
-  </header>
+  </div>
 
 
-  <nav>
+  <div class="presence">
 
-    <button
-      id="youtubeTab"
-      class="active"
-      onclick="showPanel('youtube')"
-    ></button>
+    <span
+      id="neburPresence"
+      class="person"
+    >
+      Nebur
+    </span>
 
-    <button
-      id="screenTab"
-      onclick="showPanel('screen')"
-    ></button>
+    <span
+      id="natalyaPresence"
+      class="person"
+    >
+      Наталья
+    </span>
 
-    <button
-      id="callTab"
-      onclick="showPanel('call')"
-    ></button>
+  </div>
 
-  </nav>
+</header>
 
 
-  <!-- ===================== -->
-  <!-- YOUTUBE -->
-  <!-- ===================== -->
+<nav>
 
-  <section
-    id="youtubePanel"
-    class="panel active"
+  <button
+    id="youtubeTab"
+    class="active"
+    onclick="showPanel('youtube')"
+  ></button>
+
+  <button
+    id="screenTab"
+    onclick="showPanel('screen')"
+  ></button>
+
+  <button
+    id="callTab"
+    onclick="showPanel('call')"
+  ></button>
+
+</nav>
+
+
+<!-- YOUTUBE -->
+
+<section
+  id="youtubePanel"
+  class="panel active"
+>
+
+  <div class="videoShell">
+
+    <div id="youtubePlayer"></div>
+
+  </div>
+
+
+  <div
+    id="youtubeControls"
+    class="controls"
   >
 
-    <div class="videoShell">
-      <div id="youtubePlayer"></div>
-    </div>
-
-    <div
-      id="youtubeControls"
-      class="controls"
+    <input
+      id="youtubeUrl"
+      type="text"
+      autocomplete="off"
     >
 
-      <input
-        id="youtubeUrl"
-        type="text"
-        autocomplete="off"
-      >
+    <button
+      id="loadYoutube"
+      class="primary"
+    ></button>
 
-      <button
-        id="loadYoutube"
-        class="primary"
-      ></button>
-
-    </div>
-
-    <div
-      id="ytStatus"
-      class="status"
-    ></div>
-
-  </section>
+  </div>
 
 
-  <!-- ===================== -->
-  <!-- SCREEN -->
-  <!-- ===================== -->
+  <div
+    id="ytStatus"
+    class="status"
+  ></div>
 
-  <section
-    id="screenPanel"
-    class="panel"
+</section>
+
+
+
+<!-- SCREEN -->
+
+<section
+  id="screenPanel"
+  class="panel"
+>
+
+  <div
+    id="screenHint"
+    class="hint"
+  ></div>
+
+
+  <div class="videoShell">
+
+    <video
+      id="screenVideo"
+      autoplay
+      playsinline
+      controls
+      muted
+    ></video>
+
+  </div>
+
+
+  <!-- Nebur -->
+
+  <div
+    id="hostScreenControls"
+    class="buttonRow"
   >
 
-    <div
-      id="screenHint"
-      class="hint"
-    ></div>
+    <button
+      id="shareScreen"
+      class="primary"
+    ></button>
+
+    <button
+      id="stopScreen"
+      class="secondary"
+      disabled
+    ></button>
+
+  </div>
+
+
+  <!-- Natalya / viewer -->
+
+  <div
+    id="viewerScreenControls"
+    class="buttonRow"
+  >
+
+    <button
+      id="playScreenButton"
+      class="primary"
+    ></button>
+
+    <button
+      id="screenSoundButton"
+      class="secondary"
+    ></button>
+
+  </div>
+
+
+  <div
+    id="screenStatus"
+    class="status"
+  ></div>
+
+  <div
+    id="screenDebug"
+    class="debug"
+  ></div>
+
+</section>
+
+
+
+<!-- CAMERA / VOICE -->
+
+<section
+  id="callPanel"
+  class="panel"
+>
+
+  <div class="callStage">
 
     <div class="videoShell">
 
       <video
-        id="screenVideo"
+        id="remoteMediaVideo"
         autoplay
         playsinline
         controls
       ></video>
 
+      <div
+        id="emptyCall"
+        class="emptyCall"
+      ></div>
+
     </div>
 
+
     <div
-      id="hostScreenControls"
-      class="buttonRow"
+      id="localPreview"
+      class="localPreview"
+      hidden
     >
 
-      <button
-        id="shareScreen"
-        class="primary"
-      ></button>
-
-      <button
-        id="stopScreen"
-        class="secondary"
-        disabled
-      ></button>
+      <video
+        id="localMediaVideo"
+        autoplay
+        playsinline
+        muted
+      ></video>
 
     </div>
 
-    <div
-      id="screenStatus"
-      class="status"
-    ></div>
-
-  </section>
+  </div>
 
 
-  <!-- ===================== -->
-  <!-- CAMERA / VOICE -->
-  <!-- ===================== -->
+  <div class="buttonRow">
 
-  <section
-    id="callPanel"
-    class="panel"
-  >
+    <button
+      id="cameraButton"
+      class="secondary"
+    ></button>
 
-    <div class="callStage">
+    <button
+      id="micButton"
+      class="secondary"
+    ></button>
 
-      <div class="videoShell">
+    <button
+      id="enableSound"
+      class="secondary"
+    ></button>
 
-        <video
-          id="remoteMediaVideo"
-          autoplay
-          playsinline
-          controls
-        ></video>
-
-        <div
-          id="emptyCall"
-          class="emptyCall"
-        ></div>
-
-      </div>
+  </div>
 
 
-      <div
-        id="localPreview"
-        class="localPreview"
-        hidden
-      >
+  <div
+    id="callStatus"
+    class="status"
+  ></div>
 
-        <video
-          id="localMediaVideo"
-          autoplay
-          playsinline
-          muted
-        ></video>
+  <div
+    id="callDebug"
+    class="debug"
+  ></div>
 
-      </div>
-
-    </div>
-
-
-    <div class="buttonRow">
-
-      <button
-        id="cameraButton"
-        class="secondary"
-      ></button>
-
-      <button
-        id="micButton"
-        class="secondary"
-      ></button>
-
-      <button
-        id="enableSound"
-        class="secondary"
-      ></button>
-
-    </div>
-
-    <div
-      id="callStatus"
-      class="status"
-    ></div>
-
-  </section>
+</section>
 
 </main>
 
 
 <script>
-
-/* =========================================================
-   BASIC
-========================================================= */
-
 const $ = id =>
   document.getElementById(id);
 
 
+/* =====================================================
+   USER
+===================================================== */
+
 const params =
   new URLSearchParams(location.search);
-
 
 const USER =
   params.get("user");
 
-
 const IS_NEBUR =
   USER === "nebur";
 
-
 const IS_NATALYA =
   USER === "natalya";
-
 
 const OTHER_USER =
   IS_NEBUR
@@ -592,26 +703,13 @@ const OTHER_USER =
     : "nebur";
 
 
-const MEDIA_CHANNEL =
-  USER + "-media";
-
-
-const REMOTE_MEDIA_CHANNEL =
-  OTHER_USER + "-media";
-
-
 function chooseUser(user) {
-
   location.search =
     "?user=" + user;
-
 }
 
 
-if (
-  !IS_NEBUR &&
-  !IS_NATALYA
-) {
+if (!IS_NEBUR && !IS_NATALYA) {
 
   $("rolePicker").style.display =
     "block";
@@ -624,9 +722,9 @@ if (
 }
 
 
-/* =========================================================
-   TRANSLATIONS
-========================================================= */
+/* =====================================================
+   LANGUAGE
+===================================================== */
 
 const TEXT = {
 
@@ -653,7 +751,7 @@ const TEXT = {
     connected:
       "Sala conectada ✓",
 
-    waitingNatalya:
+    waiting:
       "Esperando a Natalya…",
 
     youtubeLoaded:
@@ -663,7 +761,7 @@ const TEXT = {
       "No pude reconocer ese enlace de YouTube.",
 
     screenHint:
-      "Comparte preferiblemente una pestaña de Chrome o Edge y activa «Compartir audio de la pestaña».",
+      "Comparte preferiblemente una pestaña de Chrome o Edge. Si quieres transmitir audio, activa «Compartir audio de la pestaña».",
 
     share:
       "Compartir pantalla + audio",
@@ -671,14 +769,23 @@ const TEXT = {
     stopShare:
       "Dejar de compartir",
 
-    sharing:
-      "Estás compartiendo tu pantalla ✓",
+    playScreen:
+      "Reproducir pantalla",
 
-    remoteSharing:
-      "Natalya está compartiendo su pantalla.",
+    sound:
+      "Activar sonido",
+
+    sharing:
+      "Compartiendo pantalla ✓",
+
+    screenWaiting:
+      "Esperando transmisión…",
+
+    screenReceived:
+      "Pantalla recibida ✓",
 
     screenStopped:
-      "La transmisión de pantalla terminó.",
+      "La transmisión terminó.",
 
     screenError:
       "No se pudo compartir la pantalla.",
@@ -707,11 +814,11 @@ const TEXT = {
     callOff:
       "Cámara y micrófono apagados.",
 
-    remoteMediaStopped:
-      "Natalya apagó su cámara y micrófono.",
+    remoteStopped:
+      "Natalya apagó cámara y micrófono.",
 
     permissionError:
-      "No pude acceder a la cámara o al micrófono. Revisa los permisos del navegador.",
+      "No pude acceder a cámara o micrófono. Revisa los permisos.",
 
     soundEnabled:
       "Sonido activado ✓"
@@ -741,7 +848,7 @@ const TEXT = {
     connected:
       "Комната подключена ✓",
 
-    waitingNatalya:
+    waiting:
       "Ожидание Nebur…",
 
     youtubeLoaded:
@@ -751,7 +858,7 @@ const TEXT = {
       "Не удалось распознать ссылку YouTube.",
 
     screenHint:
-      "Здесь можно смотреть экран Nebur. Если звук не запускается автоматически, нажмите кнопку ▶ на видео.",
+      "Здесь можно смотреть экран Nebur. Когда трансляция появится, нажмите «Воспроизвести экран». Для звука нажмите «Включить звук».",
 
     share:
       "Поделиться экраном и звуком",
@@ -759,14 +866,23 @@ const TEXT = {
     stopShare:
       "Остановить трансляцию",
 
+    playScreen:
+      "Воспроизвести экран",
+
+    sound:
+      "Включить звук",
+
     sharing:
       "Идёт трансляция экрана ✓",
 
-    remoteSharing:
-      "Nebur делится экраном ✓",
+    screenWaiting:
+      "Ожидание трансляции…",
+
+    screenReceived:
+      "Экран Nebur подключен ✓",
 
     screenStopped:
-      "Трансляция экрана завершена.",
+      "Трансляция завершена.",
 
     screenError:
       "Не удалось открыть трансляцию.",
@@ -795,11 +911,11 @@ const TEXT = {
     callOff:
       "Камера и микрофон выключены.",
 
-    remoteMediaStopped:
+    remoteStopped:
       "Nebur выключил камеру и микрофон.",
 
     permissionError:
-      "Нет доступа к камере или микрофону. Проверьте разрешения Safari.",
+      "Нет доступа к камере или микрофону. Проверьте разрешения браузера.",
 
     soundEnabled:
       "Звук включён ✓"
@@ -846,6 +962,13 @@ if (USER) {
     L.stopShare;
 
 
+  $("playScreenButton").textContent =
+    L.playScreen;
+
+  $("screenSoundButton").textContent =
+    L.sound;
+
+
   $("screenHint").textContent =
     L.screenHint;
 
@@ -868,7 +991,7 @@ if (USER) {
     L.connecting;
 
   $("screenStatus").textContent =
-    L.connecting;
+    L.screenWaiting;
 
   $("callStatus").textContent =
     L.callOff;
@@ -877,13 +1000,18 @@ if (USER) {
 
 
 /*
-Natalya no puede iniciar screen capture
-desde Safari de iPhone.
+  Solo Nebur comparte pantalla
+  desde el navegador.
 
-Pero sí puede recibir tu pantalla.
+  Natalya puede verla.
 */
 
-if (IS_NATALYA) {
+if (IS_NEBUR) {
+
+  $("viewerScreenControls").style.display =
+    "none";
+
+} else {
 
   $("youtubeControls").style.display =
     "none";
@@ -894,43 +1022,44 @@ if (IS_NATALYA) {
 }
 
 
-/* =========================================================
+/* =====================================================
    PANELS
-========================================================= */
+===================================================== */
 
 function showPanel(name) {
 
-  const names =
-    ["youtube", "screen", "call"];
+  const panels = [
+    "youtube",
+    "screen",
+    "call"
+  ];
 
+  for (const item of panels) {
 
-  for (const item of names) {
+    $(item + "Panel")
+      .classList.toggle(
+        "active",
+        item === name
+      );
 
-    $(
-      item + "Panel"
-    ).classList.toggle(
-      "active",
-      item === name
-    );
-
-
-    $(
-      item + "Tab"
-    ).classList.toggle(
-      "active",
-      item === name
-    );
+    $(item + "Tab")
+      .classList.toggle(
+        "active",
+        item === name
+      );
 
   }
 
 }
 
 
-/* =========================================================
+/* =====================================================
    WEBSOCKET
-========================================================= */
+===================================================== */
 
-let socket;
+let socket = null;
+
+let otherOnline = false;
 
 
 function connectSocket() {
@@ -950,9 +1079,6 @@ function connectSocket() {
   socket.onopen = () => {
 
     $("ytStatus").textContent =
-      L.connected;
-
-    $("screenStatus").textContent =
       L.connected;
 
   };
@@ -980,15 +1106,15 @@ function connectSocket() {
 
   socket.onclose = () => {
 
-    $("ytStatus").textContent =
-      L.connecting;
+    otherOnline =
+      false;
 
-    $("screenStatus").textContent =
+    $("ytStatus").textContent =
       L.connecting;
 
     setTimeout(
       connectSocket,
-      1500
+      1200
     );
 
   };
@@ -1014,86 +1140,75 @@ function send(data) {
 
 function handleMessage(msg) {
 
-  if (msg.type === "presence") {
+  switch (msg.type) {
 
-    updatePresence(
-      msg.users || []
-    );
+    case "presence":
 
-    return;
+      updatePresence(
+        msg.users || []
+      );
 
-  }
-
-
-  if (msg.type === "yt-load") {
-
-    receiveYoutubeLoad(msg);
-
-    return;
-
-  }
+      break;
 
 
-  if (msg.type === "yt-state") {
+    case "yt-load":
 
-    receiveYoutubeState(msg);
+      receiveYoutubeLoad(msg);
 
-    return;
-
-  }
+      break;
 
 
-  if (msg.type === "rtc-offer") {
+    case "yt-state":
 
-    receiveRtcOffer(
-      msg.channel,
-      msg.sdp
-    );
+      receiveYoutubeState(msg);
 
-    return;
-
-  }
+      break;
 
 
-  if (msg.type === "rtc-answer") {
+    case "rtc-offer":
 
-    receiveRtcAnswer(
-      msg.channel,
-      msg.sdp
-    );
+      receiveRtcOffer(
+        msg.channel,
+        msg.sdp
+      );
 
-    return;
-
-  }
+      break;
 
 
-  if (msg.type === "rtc-ice") {
+    case "rtc-answer":
 
-    receiveRtcIce(
-      msg.channel,
-      msg.candidate
-    );
+      receiveRtcAnswer(
+        msg.channel,
+        msg.sdp
+      );
 
-    return;
-
-  }
+      break;
 
 
-  if (msg.type === "screen-stop") {
+    case "rtc-ice":
 
-    stopRemoteScreen();
+      receiveRtcIce(
+        msg.channel,
+        msg.candidate
+      );
 
-    return;
-
-  }
+      break;
 
 
-  if (msg.type === "media-stop") {
+    case "screen-stop":
 
-    stopRemoteMedia(
-      msg.channel
-    );
+      stopRemoteScreen();
 
+      break;
+
+
+    case "media-stop":
+
+      stopRemoteMedia(
+        msg.channel
+      );
+
+      break;
   }
 
 }
@@ -1115,15 +1230,50 @@ function updatePresence(users) {
     );
 
 
-  if (!users.includes(OTHER_USER)) {
+  const wasOnline =
+    otherOnline;
 
-    $("ytStatus").textContent =
-      L.waitingNatalya;
 
-  } else {
+  otherOnline =
+    users.includes(
+      OTHER_USER
+    );
 
-    $("ytStatus").textContent =
-      L.connected;
+
+  $("ytStatus").textContent =
+    otherOnline
+      ? L.connected
+      : L.waiting;
+
+
+  /*
+    Si la otra persona entra después
+    de que ya comenzaste a compartir,
+    generamos una nueva oferta.
+  */
+
+  if (
+    !wasOnline &&
+    otherOnline
+  ) {
+
+    if (
+      IS_NEBUR &&
+      localScreenStream
+    ) {
+
+      startScreenOffer();
+
+    }
+
+
+    if (
+      localMediaStream
+    ) {
+
+      startMediaOffer();
+
+    }
 
   }
 
@@ -1137,32 +1287,24 @@ if (USER) {
 }
 
 
-/* =========================================================
+/* =====================================================
    YOUTUBE
-========================================================= */
+===================================================== */
 
-let ytPlayer;
+let ytPlayer = null;
 
-let ytReady =
-  false;
+let ytReady = false;
 
-let applyingRemoteYT =
-  false;
+let applyingRemoteYT = false;
 
 
 window.onYouTubeIframeAPIReady =
-  () => {
+  function () {
 
     ytPlayer =
       new YT.Player(
         "youtubePlayer",
         {
-
-          height:
-            "100%",
-
-          width:
-            "100%",
 
           playerVars: {
 
@@ -1171,6 +1313,7 @@ window.onYouTubeIframeAPIReady =
             rel: 0
 
           },
+
 
           events: {
 
@@ -1219,18 +1362,6 @@ window.onYouTubeIframeAPIReady =
 
               });
 
-            },
-
-
-            onAutoplayBlocked() {
-
-              if (IS_NATALYA) {
-
-                $("ytStatus").textContent =
-                  "Нажмите ▶ один раз для запуска видео.";
-
-              }
-
             }
 
           }
@@ -1246,10 +1377,8 @@ const youtubeScript =
     "script"
   );
 
-
 youtubeScript.src =
   "https://www.youtube.com/iframe_api";
-
 
 document.head.appendChild(
   youtubeScript
@@ -1277,39 +1406,39 @@ function extractYoutubeId(value) {
     }
 
 
-    if (
-      url.searchParams.get("v")
-    ) {
+    const v =
+      url.searchParams.get("v");
 
-      return url.searchParams.get(
-        "v"
-      );
+
+    if (v) {
+
+      return v;
 
     }
 
 
-    const shorts =
+    let match =
       url.pathname.match(
         /\/shorts\/([^/?]+)/
       );
 
 
-    if (shorts) {
+    if (match) {
 
-      return shorts[1];
+      return match[1];
 
     }
 
 
-    const embed =
+    match =
       url.pathname.match(
         /\/embed\/([^/?]+)/
       );
 
 
-    if (embed) {
+    if (match) {
 
-      return embed[1];
+      return match[1];
 
     }
 
@@ -1333,7 +1462,7 @@ function extractYoutubeId(value) {
 
 
 $("loadYoutube").onclick =
-  () => {
+  function () {
 
     if (!ytReady) {
 
@@ -1376,7 +1505,7 @@ $("loadYoutube").onclick =
           false;
 
       },
-      700
+      600
     );
 
 
@@ -1407,7 +1536,7 @@ function receiveYoutubeLoad(msg) {
     setTimeout(
       () =>
         receiveYoutubeLoad(msg),
-      400
+      300
     );
 
     return;
@@ -1437,7 +1566,7 @@ function receiveYoutubeLoad(msg) {
         false;
 
     },
-    700
+    600
   );
 
 }
@@ -1445,7 +1574,10 @@ function receiveYoutubeLoad(msg) {
 
 function receiveYoutubeState(msg) {
 
-  if (!ytReady) {
+  if (
+    !ytReady ||
+    !ytPlayer
+  ) {
 
     return;
 
@@ -1464,7 +1596,7 @@ function receiveYoutubeState(msg) {
   if (
     Math.abs(
       current - msg.time
-    ) > 1.2
+    ) > 1.25
   ) {
 
     ytPlayer.seekTo(
@@ -1502,15 +1634,14 @@ function receiveYoutubeState(msg) {
         false;
 
     },
-    700
+    600
   );
 
 }
 
 
 /*
-Nebur sirve como reloj principal
-cada 4 segundos.
+  Nebur funciona como reloj maestro.
 */
 
 setInterval(
@@ -1556,15 +1687,27 @@ setInterval(
 );
 
 
-/* =========================================================
+/* =====================================================
    WEBRTC
-========================================================= */
+===================================================== */
+
+/*
+  Primero intentamos conexión directa.
+
+  TURN puede añadirse aquí después
+  si las redes de ustedes lo requieren.
+*/
 
 const ICE_SERVERS = [
 
   {
     urls:
       "stun:stun.l.google.com:19302"
+  },
+
+  {
+    urls:
+      "stun:stun1.l.google.com:19302"
   }
 
 ];
@@ -1574,11 +1717,52 @@ const peers =
   new Map();
 
 
+/*
+  MUY IMPORTANTE:
+
+  Los candidatos ICE pueden llegar ANTES
+  de la oferta WebRTC.
+
+  Por eso los guardamos aquí
+  hasta tener remoteDescription.
+*/
+
 const pendingIce =
   new Map();
 
 
-function closePeer(channel) {
+function debugScreen(text) {
+
+  console.log(
+    "[SCREEN]",
+    text
+  );
+
+
+  $("screenDebug").textContent =
+    text;
+
+}
+
+
+function debugCall(text) {
+
+  console.log(
+    "[CALL]",
+    text
+  );
+
+
+  $("callDebug").textContent =
+    text;
+
+}
+
+
+function closePeer(
+  channel,
+  clearIce = false
+) {
 
   const pc =
     peers.get(channel);
@@ -1595,9 +1779,26 @@ function closePeer(channel) {
   }
 
 
-  peers.delete(channel);
+  peers.delete(
+    channel
+  );
 
-  pendingIce.delete(channel);
+
+  /*
+    NO eliminamos candidatos ICE
+    automáticamente.
+
+    Ese era uno de los posibles bugs
+    de la versión anterior.
+  */
+
+  if (clearIce) {
+
+    pendingIce.delete(
+      channel
+    );
+
+  }
 
 }
 
@@ -1607,7 +1808,16 @@ function createPeer(
   onTrack
 ) {
 
-  closePeer(channel);
+  /*
+    Cerramos conexión anterior
+    pero preservamos candidatos
+    que hayan llegado antes.
+  */
+
+  closePeer(
+    channel,
+    false
+  );
 
 
   const pc =
@@ -1664,6 +1874,79 @@ function createPeer(
     };
 
 
+  pc.onconnectionstatechange =
+    () => {
+
+      const state =
+        pc.connectionState;
+
+
+      if (
+        channel === "screen"
+      ) {
+
+        debugScreen(
+          "WebRTC: " + state
+        );
+
+      } else {
+
+        debugCall(
+          channel +
+          " · WebRTC: " +
+          state
+        );
+
+      }
+
+
+      if (
+        state === "failed"
+      ) {
+
+        if (
+          channel === "screen"
+        ) {
+
+          $("screenStatus").textContent =
+            "WebRTC failed";
+
+        }
+
+      }
+
+    };
+
+
+  pc.oniceconnectionstatechange =
+    () => {
+
+      const state =
+        pc.iceConnectionState;
+
+
+      if (
+        channel === "screen"
+      ) {
+
+        console.log(
+          "[SCREEN ICE]",
+          state
+        );
+
+      } else {
+
+        console.log(
+          "[MEDIA ICE]",
+          channel,
+          state
+        );
+
+      }
+
+    };
+
+
   return pc;
 
 }
@@ -1700,7 +1983,14 @@ async function flushIce(
         candidate
       );
 
-    } catch {}
+    } catch (error) {
+
+      console.warn(
+        "ICE flush error",
+        error
+      );
+
+    }
 
   }
 
@@ -1713,16 +2003,15 @@ async function flushIce(
 }
 
 
-/* =========================================================
+/* =====================================================
    SCREEN SHARE
-========================================================= */
+===================================================== */
 
-let localScreenStream =
-  null;
+let localScreenStream = null;
 
 
 $("shareScreen").onclick =
-  async () => {
+  async function () {
 
     if (!IS_NEBUR) {
 
@@ -1738,38 +2027,36 @@ $("shareScreen").onclick =
           .mediaDevices
           .getDisplayMedia({
 
-            video: true,
+            video: {
+
+              frameRate: {
+                ideal: 30,
+                max: 30
+              }
+
+            },
 
             audio: true
 
           });
 
 
-      const pc =
-        createPeer(
-          "screen"
-        );
-
-
-      for (
-        const track
-        of localScreenStream
-          .getTracks()
-      ) {
-
-        pc.addTrack(
-          track,
-          localScreenStream
-        );
-
-      }
-
+      /*
+        Vista previa local
+      */
 
       $("screenVideo").srcObject =
         localScreenStream;
 
       $("screenVideo").muted =
         true;
+
+
+      try {
+
+        await $("screenVideo").play();
+
+      } catch {}
 
 
       const videoTrack =
@@ -1785,29 +2072,6 @@ $("shareScreen").onclick =
       }
 
 
-      const offer =
-        await pc.createOffer();
-
-
-      await pc.setLocalDescription(
-        offer
-      );
-
-
-      send({
-
-        type:
-          "rtc-offer",
-
-        channel:
-          "screen",
-
-        sdp:
-          pc.localDescription
-
-      });
-
-
       $("shareScreen").disabled =
         true;
 
@@ -1818,9 +2082,13 @@ $("shareScreen").onclick =
       $("screenStatus").textContent =
         L.sharing;
 
+
+      await startScreenOffer();
+
     } catch (error) {
 
       console.error(
+        "Screen capture error",
         error
       );
 
@@ -1831,6 +2099,78 @@ $("shareScreen").onclick =
     }
 
   };
+
+
+async function startScreenOffer() {
+
+  if (
+    !IS_NEBUR ||
+    !localScreenStream
+  ) {
+
+    return;
+
+  }
+
+
+  debugScreen(
+    "Creando conexión..."
+  );
+
+
+  const pc =
+    createPeer(
+      "screen"
+    );
+
+
+  for (
+    const track
+    of localScreenStream.getTracks()
+  ) {
+
+    pc.addTrack(
+      track,
+      localScreenStream
+    );
+
+  }
+
+
+  const offer =
+    await pc.createOffer();
+
+
+  await pc.setLocalDescription(
+    offer
+  );
+
+
+  /*
+    Enviamos la oferta.
+    Los ICE que se hayan adelantado
+    ya estarán esperando en el otro lado.
+  */
+
+  send({
+
+    type:
+      "rtc-offer",
+
+    channel:
+      "screen",
+
+    sdp:
+      pc.localDescription
+
+  });
+
+
+  debugScreen(
+    "Oferta enviada. Esperando viewer..."
+  );
+
+}
 
 
 $("stopScreen").onclick =
@@ -1845,8 +2185,7 @@ function stopSharing() {
 
     for (
       const track
-      of localScreenStream
-        .getTracks()
+      of localScreenStream.getTracks()
     ) {
 
       track.stop();
@@ -1861,7 +2200,8 @@ function stopSharing() {
 
 
   closePeer(
-    "screen"
+    "screen",
+    true
   );
 
 
@@ -1880,6 +2220,11 @@ function stopSharing() {
     L.screenStopped;
 
 
+  debugScreen(
+    "Screen stopped"
+  );
+
+
   send({
 
     type:
@@ -1893,7 +2238,8 @@ function stopSharing() {
 function stopRemoteScreen() {
 
   closePeer(
-    "screen"
+    "screen",
+    true
   );
 
 
@@ -1904,12 +2250,115 @@ function stopRemoteScreen() {
   $("screenStatus").textContent =
     L.screenStopped;
 
+
+  debugScreen(
+    "Remote screen stopped"
+  );
+
 }
 
 
-/* =========================================================
+/*
+  Botón de reproducción manual.
+
+  Útil en Android / iPhone.
+*/
+
+$("playScreenButton").onclick =
+  async function () {
+
+    const video =
+      $("screenVideo");
+
+
+    if (!video.srcObject) {
+
+      $("screenStatus").textContent =
+        L.screenWaiting;
+
+      return;
+
+    }
+
+
+    video.muted =
+      true;
+
+
+    try {
+
+      await video.play();
+
+
+      $("screenStatus").textContent =
+        L.screenReceived;
+
+    } catch (error) {
+
+      console.error(
+        "Screen play error",
+        error
+      );
+
+    }
+
+  };
+
+
+$("screenSoundButton").onclick =
+  async function () {
+
+    const video =
+      $("screenVideo");
+
+
+    if (!video.srcObject) {
+
+      $("screenStatus").textContent =
+        L.screenWaiting;
+
+      return;
+
+    }
+
+
+    video.muted =
+      false;
+
+
+    try {
+
+      await video.play();
+
+
+      $("screenStatus").textContent =
+        IS_NATALYA
+          ? "Экран и звук подключены ✓"
+          : "Pantalla y sonido activos ✓";
+
+    } catch (error) {
+
+      console.error(
+        "Screen audio error",
+        error
+      );
+
+    }
+
+  };
+
+
+/* =====================================================
    CAMERA + MICROPHONE
-========================================================= */
+===================================================== */
+
+const MEDIA_CHANNEL =
+  USER + "-media";
+
+
+const REMOTE_MEDIA_CHANNEL =
+  OTHER_USER + "-media";
+
 
 let micEnabled =
   false;
@@ -1921,64 +2370,28 @@ let localMediaStream =
   null;
 
 
-async function toggleMicrophone() {
-
-  const previous =
-    micEnabled;
-
-
-  micEnabled =
-    !micEnabled;
-
-
-  try {
-
-    await restartOutgoingMedia();
-
-  } catch {
+$("micButton").onclick =
+  async function () {
 
     micEnabled =
-      previous;
+      !micEnabled;
 
-    updateMediaButtons();
-
-  }
-
-}
-
-
-async function toggleCamera() {
-
-  const previous =
-    cameraEnabled;
-
-
-  cameraEnabled =
-    !cameraEnabled;
-
-
-  try {
 
     await restartOutgoingMedia();
 
-  } catch {
-
-    cameraEnabled =
-      previous;
-
-    updateMediaButtons();
-
-  }
-
-}
-
-
-$("micButton").onclick =
-  toggleMicrophone;
+};
 
 
 $("cameraButton").onclick =
-  toggleCamera;
+  async function () {
+
+    cameraEnabled =
+      !cameraEnabled;
+
+
+    await restartOutgoingMedia();
+
+};
 
 
 function updateMediaButtons() {
@@ -1995,16 +2408,18 @@ function updateMediaButtons() {
       : L.cameraOff;
 
 
-  $("micButton").classList.toggle(
-    "active",
-    micEnabled
-  );
+  $("micButton")
+    .classList.toggle(
+      "active",
+      micEnabled
+    );
 
 
-  $("cameraButton").classList.toggle(
-    "active",
-    cameraEnabled
-  );
+  $("cameraButton")
+    .classList.toggle(
+      "active",
+      cameraEnabled
+    );
 
 }
 
@@ -2044,14 +2459,10 @@ async function restartOutgoingMedia() {
 
 
   closePeer(
-    MEDIA_CHANNEL
+    MEDIA_CHANNEL,
+    true
   );
 
-
-  /*
-  Decimos al otro que cierre
-  la conexión anterior.
-  */
 
   send({
 
@@ -2107,15 +2518,26 @@ async function restartOutgoingMedia() {
   } catch (error) {
 
     console.error(
+      "getUserMedia error",
       error
     );
+
+
+    micEnabled =
+      false;
+
+    cameraEnabled =
+      false;
+
+
+    updateMediaButtons();
 
 
     $("callStatus").textContent =
       L.permissionError;
 
 
-    throw error;
+    return;
 
   }
 
@@ -2126,6 +2548,23 @@ async function restartOutgoingMedia() {
 
   $("localPreview").hidden =
     !cameraEnabled;
+
+
+  updateMediaButtons();
+
+
+  await startMediaOffer();
+
+}
+
+
+async function startMediaOffer() {
+
+  if (!localMediaStream) {
+
+    return;
+
+  }
 
 
   const pc =
@@ -2174,15 +2613,12 @@ async function restartOutgoingMedia() {
   $("callStatus").textContent =
     L.callLive;
 
-
-  updateMediaButtons();
-
 }
 
 
-/* =========================================================
-   RECEIVE RTC OFFER
-========================================================= */
+/* =====================================================
+   RECEIVE OFFER
+===================================================== */
 
 async function receiveRtcOffer(
   channel,
@@ -2203,12 +2639,16 @@ async function receiveRtcOffer(
     null;
 
 
+  /*
+    Pantalla de Nebur
+  */
+
   if (
     channel === "screen"
   ) {
 
     onTrack =
-      event => {
+      async event => {
 
         const stream =
           event.streams[0];
@@ -2221,22 +2661,57 @@ async function receiveRtcOffer(
         }
 
 
-        $("screenVideo").srcObject =
+        const video =
+          $("screenVideo");
+
+
+        video.srcObject =
           stream;
 
 
-        $("screenVideo")
-          .play()
-          .catch(() => {});
+        /*
+          Empezamos muteado para que
+          Android/iOS permitan autoplay.
+        */
+
+        video.muted =
+          true;
 
 
         $("screenStatus").textContent =
-          L.remoteSharing;
+          L.screenReceived;
+
+
+        debugScreen(
+          "MediaStream recibido ✓"
+        );
+
+
+        try {
+
+          await video.play();
+
+
+          debugScreen(
+            "Vídeo reproduciendo ✓"
+          );
+
+        } catch (error) {
+
+          debugScreen(
+            "Stream recibido. Pulsa reproducir."
+          );
+
+        }
 
       };
 
   }
 
+
+  /*
+    Cámara / micrófono del otro usuario
+  */
 
   if (
     channel ===
@@ -2244,7 +2719,7 @@ async function receiveRtcOffer(
   ) {
 
     onTrack =
-      event => {
+      async event => {
 
         const stream =
           event.streams[0];
@@ -2257,18 +2732,23 @@ async function receiveRtcOffer(
         }
 
 
-        $("remoteMediaVideo")
-          .srcObject =
-            stream;
+        const video =
+          $("remoteMediaVideo");
+
+
+        video.srcObject =
+          stream;
 
 
         $("emptyCall").style.display =
           "none";
 
 
-        $("remoteMediaVideo")
-          .play()
-          .catch(() => {});
+        try {
+
+          await video.play();
+
+        } catch {}
 
 
         $("callStatus").textContent =
@@ -2294,6 +2774,11 @@ async function receiveRtcOffer(
       )
     );
 
+
+    /*
+      Ahora que tenemos descripción remota,
+      añadimos los ICE que llegaron antes.
+    */
 
     await flushIce(
       channel
@@ -2321,21 +2806,44 @@ async function receiveRtcOffer(
 
     });
 
+
+    if (
+      channel === "screen"
+    ) {
+
+      debugScreen(
+        "Oferta recibida. Respuesta enviada ✓"
+      );
+
+    }
+
   } catch (error) {
 
     console.error(
-      "RTC offer error:",
+      "RTC offer error",
       error
     );
+
+
+    if (
+      channel === "screen"
+    ) {
+
+      debugScreen(
+        "Error en oferta: " +
+        error.message
+      );
+
+    }
 
   }
 
 }
 
 
-/* =========================================================
-   RECEIVE RTC ANSWER
-========================================================= */
+/* =====================================================
+   RECEIVE ANSWER
+===================================================== */
 
 async function receiveRtcAnswer(
   channel,
@@ -2369,10 +2877,21 @@ async function receiveRtcAnswer(
       channel
     );
 
+
+    if (
+      channel === "screen"
+    ) {
+
+      debugScreen(
+        "Respuesta recibida ✓"
+      );
+
+    }
+
   } catch (error) {
 
     console.error(
-      "RTC answer error:",
+      "RTC answer error",
       error
     );
 
@@ -2381,9 +2900,9 @@ async function receiveRtcAnswer(
 }
 
 
-/* =========================================================
+/* =====================================================
    RECEIVE ICE
-========================================================= */
+===================================================== */
 
 async function receiveRtcIce(
   channel,
@@ -2410,6 +2929,12 @@ async function receiveRtcIce(
     peers.get(channel);
 
 
+  /*
+    Si todavía no existe peer
+    o no tenemos descripción remota,
+    guardamos el candidato.
+  */
+
   if (
     !pc ||
     !pc.remoteDescription
@@ -2431,6 +2956,17 @@ async function receiveRtcIce(
     );
 
 
+    if (
+      channel === "screen"
+    ) {
+
+      debugScreen(
+        "ICE guardado temporalmente..."
+      );
+
+    }
+
+
     return;
 
   }
@@ -2445,7 +2981,7 @@ async function receiveRtcIce(
   } catch (error) {
 
     console.warn(
-      "ICE error:",
+      "ICE error",
       error
     );
 
@@ -2454,9 +2990,9 @@ async function receiveRtcIce(
 }
 
 
-/* =========================================================
-   REMOTE MEDIA STOP
-========================================================= */
+/* =====================================================
+   MEDIA STOP
+===================================================== */
 
 function stopRemoteMedia(
   channel
@@ -2473,7 +3009,8 @@ function stopRemoteMedia(
 
 
   closePeer(
-    channel
+    channel,
+    true
   );
 
 
@@ -2486,66 +3023,71 @@ function stopRemoteMedia(
 
 
   $("callStatus").textContent =
-    L.remoteMediaStopped;
+    L.remoteStopped;
 
 }
 
 
-/* =========================================================
-   ENABLE SOUND
-========================================================= */
+/* =====================================================
+   ENABLE AUDIO
+===================================================== */
 
 $("enableSound").onclick =
-  async () => {
+  async function () {
 
-    const videos = [
-
-      $("screenVideo"),
-
-      $("remoteMediaVideo")
-
-    ];
+    const video =
+      $("remoteMediaVideo");
 
 
-    for (
-      const video
-      of videos
-    ) {
-
-      if (
-        video.srcObject
-      ) {
-
-        try {
-
-          video.muted =
-            false;
+    video.muted =
+      false;
 
 
-          await video.play();
+    try {
 
-        } catch {}
+      await video.play();
 
-      }
+
+      $("callStatus").textContent =
+        L.soundEnabled;
+
+    } catch (error) {
+
+      console.error(
+        "Remote audio play error",
+        error
+      );
 
     }
-
-
-    $("callStatus").textContent =
-      L.soundEnabled;
 
   };
 
 
-/* =========================================================
+/* =====================================================
    CLEANUP
-========================================================= */
+===================================================== */
 
 window.addEventListener(
   "beforeunload",
   () => {
 
     stopLocalMediaTracks();
+
+
+    if (
+      localScreenStream
+    ) {
+
+      for (
+        const track
+        of localScreenStream.getTracks()
+      ) {
+
+        track.stop();
+
+      }
+
+    }
 
 
     for (
@@ -2563,7 +3105,6 @@ window.addEventListener(
 
   }
 );
-
 </script>
 
 </body>
