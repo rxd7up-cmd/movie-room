@@ -2,6 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="utf-8">
+
   <meta
     name="viewport"
     content="width=device-width,initial-scale=1,viewport-fit=cover"
@@ -47,6 +48,7 @@
     .app {
       max-width: 1100px;
       margin: auto;
+
       padding:
         max(20px, env(safe-area-inset-top))
         16px
@@ -55,39 +57,40 @@
 
     header {
       display: flex;
-      align-items: center;
       justify-content: space-between;
-      gap: 15px;
-      margin-bottom: 22px;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 20px;
     }
 
     .eyebrow {
-      font-size: 12px;
-      letter-spacing: .15em;
-      opacity: .55;
+      font-size: 11px;
+      letter-spacing: .16em;
+      opacity: .5;
     }
 
     h1 {
       margin: 4px 0 0;
-      font-size: clamp(24px, 5vw, 38px);
+      font-size: clamp(25px, 6vw, 40px);
     }
 
     .presence {
       display: flex;
-      gap: 10px;
-      font-size: 13px;
+      gap: 8px;
+      flex-wrap: wrap;
     }
 
     .person {
       padding: 8px 11px;
       border: 1px solid #303239;
       border-radius: 999px;
-      opacity: .5;
+      opacity: .45;
+      font-size: 13px;
     }
 
     .person.online {
       opacity: 1;
-      border-color: #60646d;
+      border-color: #777c86;
     }
 
     .person.online::before {
@@ -96,23 +99,25 @@
     }
 
     nav {
-      display: flex;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
       gap: 8px;
       margin-bottom: 18px;
     }
 
     nav button {
-      flex: 1;
-      border: 1px solid #2a2c31;
-      border-radius: 12px;
-      background: #131519;
-      color: inherit;
-      padding: 13px;
+      min-height: 48px;
+      padding: 10px;
+      border: 1px solid #292c32;
+      border-radius: 13px;
+      background: #14161a;
+      color: white;
     }
 
     nav button.active {
-      background: #f4f4f4;
+      background: white;
       color: #111;
+      font-weight: 700;
     }
 
     .panel {
@@ -125,9 +130,9 @@
 
     .videoShell {
       position: relative;
-      overflow: hidden;
       width: 100%;
       aspect-ratio: 16 / 9;
+      overflow: hidden;
       border: 1px solid #292c32;
       border-radius: 18px;
       background: #000;
@@ -135,13 +140,15 @@
 
     #youtubePlayer,
     #youtubePlayer iframe,
-    #screenVideo {
+    #screenVideo,
+    #remoteMediaVideo {
+      display: block;
       width: 100%;
       height: 100%;
     }
 
-    #screenVideo {
-      display: block;
+    #screenVideo,
+    #remoteMediaVideo {
       object-fit: contain;
       background: black;
     }
@@ -155,17 +162,21 @@
     .controls input {
       flex: 1;
       min-width: 0;
+
+      padding: 13px 14px;
+
       border: 1px solid #303239;
       border-radius: 12px;
+
       background: #121418;
       color: white;
-      padding: 13px 14px;
     }
 
     .primary,
     .secondary {
+      min-height: 46px;
+      padding: 11px 16px;
       border-radius: 12px;
-      padding: 12px 16px;
     }
 
     .primary {
@@ -181,39 +192,91 @@
       color: white;
     }
 
-    .screenActions {
+    .secondary.active {
+      background: white;
+      color: #111;
+      font-weight: 700;
+    }
+
+    .buttonRow {
       display: flex;
-      gap: 10px;
+      gap: 9px;
       margin-top: 14px;
+      flex-wrap: wrap;
     }
 
     .status {
       min-height: 22px;
       margin-top: 12px;
       font-size: 13px;
-      opacity: .65;
+      opacity: .68;
     }
 
-    .iphoneNotice {
-      display: none;
+    .hint {
       margin: 12px 0;
-      padding: 12px;
-      border: 1px solid #343840;
-      border-radius: 12px;
-      background: #15171c;
-      font-size: 14px;
-      line-height: 1.4;
+      padding: 12px 14px;
+
+      border: 1px solid #303239;
+      border-radius: 13px;
+
+      background: #14161a;
+
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .callStage {
+      position: relative;
+    }
+
+    .localPreview {
+      position: absolute;
+      right: 12px;
+      bottom: 12px;
+
+      width: min(28%, 180px);
+      aspect-ratio: 3 / 4;
+
+      overflow: hidden;
+
+      border: 2px solid rgba(255,255,255,.75);
+      border-radius: 15px;
+
+      background: #111;
+
+      box-shadow: 0 10px 40px rgba(0,0,0,.45);
+
+      z-index: 3;
+    }
+
+    #localMediaVideo {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transform: scaleX(-1);
+    }
+
+    .emptyCall {
+      position: absolute;
+      inset: 0;
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      padding: 30px;
+
+      text-align: center;
+      opacity: .55;
+      pointer-events: none;
     }
 
     .rolePicker {
       display: none;
       max-width: 420px;
       margin: 100px auto;
+      padding: 20px;
       text-align: center;
-    }
-
-    .rolePicker h2 {
-      margin-bottom: 24px;
     }
 
     .rolePicker button {
@@ -226,7 +289,7 @@
       font-weight: 700;
     }
 
-    @media (max-width: 600px) {
+    @media (max-width: 650px) {
       header {
         display: block;
       }
@@ -235,17 +298,31 @@
         margin-top: 14px;
       }
 
+      nav {
+        grid-template-columns: 1fr;
+      }
+
       .controls {
         flex-direction: column;
       }
 
-      .screenActions {
-        flex-direction: column;
+      .controls button {
+        width: 100%;
       }
 
-      .primary,
-      .secondary {
+      .buttonRow {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .buttonRow button {
         width: 100%;
+      }
+
+      .localPreview {
+        width: 27%;
+        right: 8px;
+        bottom: 8px;
       }
     }
   </style>
@@ -254,6 +331,7 @@
 <body>
 
 <div id="rolePicker" class="rolePicker">
+
   <h2>Moscow ↔ Samara</h2>
 
   <button onclick="chooseUser('nebur')">
@@ -263,17 +341,26 @@
   <button onclick="chooseUser('natalya')">
     Наталья · Русский
   </button>
+
 </div>
+
 
 <main id="app" class="app" hidden>
 
   <header>
+
     <div>
-      <div class="eyebrow">PRIVATE ROOM</div>
-      <h1>Moscow ↔ Samara</h1>
+      <div class="eyebrow">
+        PRIVATE ROOM
+      </div>
+
+      <h1>
+        Moscow ↔ Samara
+      </h1>
     </div>
 
     <div class="presence">
+
       <span id="neburPresence" class="person">
         Nebur
       </span>
@@ -281,10 +368,14 @@
       <span id="natalyaPresence" class="person">
         Наталья
       </span>
+
     </div>
+
   </header>
 
+
   <nav>
+
     <button
       id="youtubeTab"
       class="active"
@@ -295,21 +386,36 @@
       id="screenTab"
       onclick="showPanel('screen')"
     ></button>
+
+    <button
+      id="callTab"
+      onclick="showPanel('call')"
+    ></button>
+
   </nav>
 
-  <!-- YOUTUBE -->
 
-  <section id="youtubePanel" class="panel active">
+  <!-- ===================== -->
+  <!-- YOUTUBE -->
+  <!-- ===================== -->
+
+  <section
+    id="youtubePanel"
+    class="panel active"
+  >
 
     <div class="videoShell">
       <div id="youtubePlayer"></div>
     </div>
 
-    <div id="youtubeControls" class="controls">
+    <div
+      id="youtubeControls"
+      class="controls"
+    >
+
       <input
         id="youtubeUrl"
         type="text"
-        placeholder=""
         autocomplete="off"
       >
 
@@ -317,28 +423,46 @@
         id="loadYoutube"
         class="primary"
       ></button>
+
     </div>
 
-    <div id="ytStatus" class="status"></div>
+    <div
+      id="ytStatus"
+      class="status"
+    ></div>
 
   </section>
 
-  <!-- SCREEN SHARE -->
 
-  <section id="screenPanel" class="panel">
+  <!-- ===================== -->
+  <!-- SCREEN -->
+  <!-- ===================== -->
 
-    <div id="iphoneNotice" class="iphoneNotice"></div>
+  <section
+    id="screenPanel"
+    class="panel"
+  >
+
+    <div
+      id="screenHint"
+      class="hint"
+    ></div>
 
     <div class="videoShell">
+
       <video
         id="screenVideo"
         autoplay
         playsinline
         controls
       ></video>
+
     </div>
 
-    <div id="hostScreenControls" class="screenActions">
+    <div
+      id="hostScreenControls"
+      class="buttonRow"
+    >
 
       <button
         id="shareScreen"
@@ -353,710 +477,2092 @@
 
     </div>
 
-    <div id="screenStatus" class="status"></div>
+    <div
+      id="screenStatus"
+      class="status"
+    ></div>
+
+  </section>
+
+
+  <!-- ===================== -->
+  <!-- CAMERA / VOICE -->
+  <!-- ===================== -->
+
+  <section
+    id="callPanel"
+    class="panel"
+  >
+
+    <div class="callStage">
+
+      <div class="videoShell">
+
+        <video
+          id="remoteMediaVideo"
+          autoplay
+          playsinline
+          controls
+        ></video>
+
+        <div
+          id="emptyCall"
+          class="emptyCall"
+        ></div>
+
+      </div>
+
+
+      <div
+        id="localPreview"
+        class="localPreview"
+        hidden
+      >
+
+        <video
+          id="localMediaVideo"
+          autoplay
+          playsinline
+          muted
+        ></video>
+
+      </div>
+
+    </div>
+
+
+    <div class="buttonRow">
+
+      <button
+        id="cameraButton"
+        class="secondary"
+      ></button>
+
+      <button
+        id="micButton"
+        class="secondary"
+      ></button>
+
+      <button
+        id="enableSound"
+        class="secondary"
+      ></button>
+
+    </div>
+
+    <div
+      id="callStatus"
+      class="status"
+    ></div>
 
   </section>
 
 </main>
 
+
 <script>
 
-const params = new URLSearchParams(location.search);
-const USER = params.get("user");
+/* =========================================================
+   BASIC
+========================================================= */
 
-const IS_NEBUR = USER === "nebur";
-const IS_NATALYA = USER === "natalya";
+const $ = id =>
+  document.getElementById(id);
 
-if (!IS_NEBUR && !IS_NATALYA) {
-  document.getElementById("rolePicker").style.display = "block";
-} else {
-  document.getElementById("app").hidden = false;
-}
+
+const params =
+  new URLSearchParams(location.search);
+
+
+const USER =
+  params.get("user");
+
+
+const IS_NEBUR =
+  USER === "nebur";
+
+
+const IS_NATALYA =
+  USER === "natalya";
+
+
+const OTHER_USER =
+  IS_NEBUR
+    ? "natalya"
+    : "nebur";
+
+
+const MEDIA_CHANNEL =
+  USER + "-media";
+
+
+const REMOTE_MEDIA_CHANNEL =
+  OTHER_USER + "-media";
+
 
 function chooseUser(user) {
-  location.search = "?user=" + user;
+
+  location.search =
+    "?user=" + user;
+
 }
 
-/* -------------------------
-   LANGUAGE
-------------------------- */
+
+if (
+  !IS_NEBUR &&
+  !IS_NATALYA
+) {
+
+  $("rolePicker").style.display =
+    "block";
+
+} else {
+
+  $("app").hidden =
+    false;
+
+}
+
+
+/* =========================================================
+   TRANSLATIONS
+========================================================= */
 
 const TEXT = {
 
   es: {
-    youtube: "YouTube juntos",
-    screen: "Compartir pantalla",
 
-    youtubePlaceholder: "Pega un enlace de YouTube…",
-    load: "Ver juntos",
+    youtube:
+      "YouTube juntos",
 
-    share: "Compartir pantalla + audio",
-    stop: "Dejar de compartir",
+    screen:
+      "Compartir pantalla",
 
-    connecting: "Conectando…",
-    connected: "Sala conectada ✓",
+    call:
+      "Cámara y voz",
 
-    waiting:
+    youtubePlaceholder:
+      "Pega un enlace de YouTube…",
+
+    load:
+      "Ver juntos",
+
+    connecting:
+      "Conectando…",
+
+    connected:
+      "Sala conectada ✓",
+
+    waitingNatalya:
       "Esperando a Natalya…",
 
     youtubeLoaded:
       "Vídeo enviado a Natalya ✓",
 
+    invalidYoutube:
+      "No pude reconocer ese enlace de YouTube.",
+
+    screenHint:
+      "Comparte preferiblemente una pestaña de Chrome o Edge y activa «Compartir audio de la pestaña».",
+
+    share:
+      "Compartir pantalla + audio",
+
+    stopShare:
+      "Dejar de compartir",
+
     sharing:
-      "Estás compartiendo tu pantalla.",
-
-    stopped:
-      "Has dejado de compartir.",
-
-    shareError:
-      "No se pudo compartir la pantalla.",
+      "Estás compartiendo tu pantalla ✓",
 
     remoteSharing:
-      "Natalya está compartiendo.",
+      "Natalya está compartiendo su pantalla.",
 
-    invalidYoutube:
-      "No pude reconocer ese enlace de YouTube."
+    screenStopped:
+      "La transmisión de pantalla terminó.",
+
+    screenError:
+      "No se pudo compartir la pantalla.",
+
+    cameraOn:
+      "Apagar cámara",
+
+    cameraOff:
+      "Encender cámara",
+
+    micOn:
+      "Silenciar micrófono",
+
+    micOff:
+      "Encender micrófono",
+
+    enableSound:
+      "Activar sonido",
+
+    emptyCall:
+      "Activa cámara o micrófono para comenzar.",
+
+    callLive:
+      "Cámara / voz conectada ✓",
+
+    callOff:
+      "Cámara y micrófono apagados.",
+
+    remoteMediaStopped:
+      "Natalya apagó su cámara y micrófono.",
+
+    permissionError:
+      "No pude acceder a la cámara o al micrófono. Revisa los permisos del navegador.",
+
+    soundEnabled:
+      "Sonido activado ✓"
   },
 
+
   ru: {
-    youtube: "YouTube вместе",
-    screen: "Экран",
+
+    youtube:
+      "YouTube вместе",
+
+    screen:
+      "Экран Nebur",
+
+    call:
+      "Камера и голос",
 
     youtubePlaceholder:
       "Ссылка на YouTube…",
 
-    load: "Смотреть вместе",
+    load:
+      "Смотреть вместе",
 
-    share: "Поделиться экраном и звуком",
-    stop: "Остановить трансляцию",
+    connecting:
+      "Подключение…",
 
-    connecting: "Подключение…",
-    connected: "Комната подключена ✓",
+    connected:
+      "Комната подключена ✓",
 
-    waiting:
+    waitingNatalya:
       "Ожидание Nebur…",
 
     youtubeLoaded:
       "Видео синхронизировано ✓",
 
-    sharing:
-      "Идёт трансляция экрана.",
-
-    stopped:
-      "Трансляция остановлена.",
-
-    shareError:
-      "Не удалось открыть трансляцию экрана.",
-
-    remoteSharing:
-      "Nebur делится экраном.",
-
     invalidYoutube:
       "Не удалось распознать ссылку YouTube.",
 
-    iphone:
-      "Если видео или звук не запустятся автоматически, коснитесь кнопки ▶ на плеере один раз."
+    screenHint:
+      "Здесь можно смотреть экран Nebur. Если звук не запускается автоматически, нажмите кнопку ▶ на видео.",
+
+    share:
+      "Поделиться экраном и звуком",
+
+    stopShare:
+      "Остановить трансляцию",
+
+    sharing:
+      "Идёт трансляция экрана ✓",
+
+    remoteSharing:
+      "Nebur делится экраном ✓",
+
+    screenStopped:
+      "Трансляция экрана завершена.",
+
+    screenError:
+      "Не удалось открыть трансляцию.",
+
+    cameraOn:
+      "Выключить камеру",
+
+    cameraOff:
+      "Включить камеру",
+
+    micOn:
+      "Выключить микрофон",
+
+    micOff:
+      "Включить микрофон",
+
+    enableSound:
+      "Включить звук",
+
+    emptyCall:
+      "Включите камеру или микрофон, чтобы начать.",
+
+    callLive:
+      "Камера / голос подключены ✓",
+
+    callOff:
+      "Камера и микрофон выключены.",
+
+    remoteMediaStopped:
+      "Nebur выключил камеру и микрофон.",
+
+    permissionError:
+      "Нет доступа к камере или микрофону. Проверьте разрешения Safari.",
+
+    soundEnabled:
+      "Звук включён ✓"
   }
+
 };
 
-const L = IS_NATALYA ? TEXT.ru : TEXT.es;
 
-document.documentElement.lang = IS_NATALYA ? "ru" : "es";
+const L =
+  IS_NATALYA
+    ? TEXT.ru
+    : TEXT.es;
+
 
 if (USER) {
-  youtubeTab.textContent = L.youtube;
-  screenTab.textContent = L.screen;
 
-  youtubeUrl.placeholder = L.youtubePlaceholder;
-  loadYoutube.textContent = L.load;
+  document.documentElement.lang =
+    IS_NATALYA
+      ? "ru"
+      : "es";
 
-  shareScreen.textContent = L.share;
-  stopScreen.textContent = L.stop;
 
-  ytStatus.textContent = L.connecting;
-  screenStatus.textContent = L.connecting;
+  $("youtubeTab").textContent =
+    L.youtube;
+
+  $("screenTab").textContent =
+    L.screen;
+
+  $("callTab").textContent =
+    L.call;
+
+
+  $("youtubeUrl").placeholder =
+    L.youtubePlaceholder;
+
+  $("loadYoutube").textContent =
+    L.load;
+
+
+  $("shareScreen").textContent =
+    L.share;
+
+  $("stopScreen").textContent =
+    L.stopShare;
+
+
+  $("screenHint").textContent =
+    L.screenHint;
+
+
+  $("cameraButton").textContent =
+    L.cameraOff;
+
+  $("micButton").textContent =
+    L.micOff;
+
+  $("enableSound").textContent =
+    L.enableSound;
+
+
+  $("emptyCall").textContent =
+    L.emptyCall;
+
+
+  $("ytStatus").textContent =
+    L.connecting;
+
+  $("screenStatus").textContent =
+    L.connecting;
+
+  $("callStatus").textContent =
+    L.callOff;
+
 }
+
+
+/*
+Natalya no puede iniciar screen capture
+desde Safari de iPhone.
+
+Pero sí puede recibir tu pantalla.
+*/
 
 if (IS_NATALYA) {
-  youtubeControls.style.display = "none";
-  hostScreenControls.style.display = "none";
 
-  iphoneNotice.textContent = L.iphone;
-  iphoneNotice.style.display = "block";
+  $("youtubeControls").style.display =
+    "none";
+
+  $("hostScreenControls").style.display =
+    "none";
+
 }
 
-/* -------------------------
+
+/* =========================================================
    PANELS
-------------------------- */
+========================================================= */
 
 function showPanel(name) {
 
-  youtubePanel.classList.toggle(
-    "active",
-    name === "youtube"
-  );
+  const names =
+    ["youtube", "screen", "call"];
 
-  screenPanel.classList.toggle(
-    "active",
-    name === "screen"
-  );
 
-  youtubeTab.classList.toggle(
-    "active",
-    name === "youtube"
-  );
+  for (const item of names) {
 
-  screenTab.classList.toggle(
-    "active",
-    name === "screen"
-  );
+    $(
+      item + "Panel"
+    ).classList.toggle(
+      "active",
+      item === name
+    );
+
+
+    $(
+      item + "Tab"
+    ).classList.toggle(
+      "active",
+      item === name
+    );
+
+  }
+
 }
 
-/* -------------------------
+
+/* =========================================================
    WEBSOCKET
-------------------------- */
+========================================================= */
 
 let socket;
 
-function connect() {
+
+function connectSocket() {
 
   const protocol =
     location.protocol === "https:"
       ? "wss:"
       : "ws:";
 
-  socket = new WebSocket(
-    `${protocol}//${location.host}/ws?user=${USER}`
-  );
+
+  socket =
+    new WebSocket(
+      `${protocol}//${location.host}/ws?user=${USER}`
+    );
+
 
   socket.onopen = () => {
-    ytStatus.textContent = L.connected;
-    screenStatus.textContent = L.connected;
+
+    $("ytStatus").textContent =
+      L.connected;
+
+    $("screenStatus").textContent =
+      L.connected;
+
   };
+
 
   socket.onmessage = event => {
 
     let msg;
 
     try {
-      msg = JSON.parse(event.data);
+
+      msg =
+        JSON.parse(event.data);
+
     } catch {
+
       return;
+
     }
 
     handleMessage(msg);
+
   };
+
 
   socket.onclose = () => {
-    ytStatus.textContent = L.connecting;
-    screenStatus.textContent = L.connecting;
 
-    setTimeout(connect, 1500);
+    $("ytStatus").textContent =
+      L.connecting;
+
+    $("screenStatus").textContent =
+      L.connecting;
+
+    setTimeout(
+      connectSocket,
+      1500
+    );
+
   };
+
 }
+
 
 function send(data) {
-  if (socket?.readyState === WebSocket.OPEN) {
-    socket.send(JSON.stringify(data));
+
+  if (
+    socket &&
+    socket.readyState === WebSocket.OPEN
+  ) {
+
+    socket.send(
+      JSON.stringify(data)
+    );
+
   }
+
 }
+
 
 function handleMessage(msg) {
 
   if (msg.type === "presence") {
-    updatePresence(msg.users);
+
+    updatePresence(
+      msg.users || []
+    );
+
     return;
+
   }
+
 
   if (msg.type === "yt-load") {
+
     receiveYoutubeLoad(msg);
+
     return;
+
   }
+
 
   if (msg.type === "yt-state") {
+
     receiveYoutubeState(msg);
+
     return;
+
   }
+
 
   if (msg.type === "rtc-offer") {
-    receiveOffer(msg.sdp);
+
+    receiveRtcOffer(
+      msg.channel,
+      msg.sdp
+    );
+
     return;
+
   }
+
 
   if (msg.type === "rtc-answer") {
-    receiveAnswer(msg.sdp);
+
+    receiveRtcAnswer(
+      msg.channel,
+      msg.sdp
+    );
+
     return;
+
   }
+
 
   if (msg.type === "rtc-ice") {
-    receiveIce(msg.candidate);
+
+    receiveRtcIce(
+      msg.channel,
+      msg.candidate
+    );
+
     return;
+
   }
 
+
   if (msg.type === "screen-stop") {
+
     stopRemoteScreen();
+
+    return;
+
   }
+
+
+  if (msg.type === "media-stop") {
+
+    stopRemoteMedia(
+      msg.channel
+    );
+
+  }
+
 }
+
 
 function updatePresence(users) {
 
-  neburPresence.classList.toggle(
-    "online",
-    users.includes("nebur")
-  );
+  $("neburPresence")
+    .classList.toggle(
+      "online",
+      users.includes("nebur")
+    );
 
-  natalyaPresence.classList.toggle(
-    "online",
-    users.includes("natalya")
-  );
 
-  const other =
-    IS_NEBUR ? "natalya" : "nebur";
+  $("natalyaPresence")
+    .classList.toggle(
+      "online",
+      users.includes("natalya")
+    );
 
-  if (!users.includes(other)) {
-    ytStatus.textContent = L.waiting;
+
+  if (!users.includes(OTHER_USER)) {
+
+    $("ytStatus").textContent =
+      L.waitingNatalya;
+
   } else {
-    ytStatus.textContent = L.connected;
+
+    $("ytStatus").textContent =
+      L.connected;
+
   }
+
 }
 
-if (USER) connect();
 
-/* -------------------------
+if (USER) {
+
+  connectSocket();
+
+}
+
+
+/* =========================================================
    YOUTUBE
-------------------------- */
+========================================================= */
 
 let ytPlayer;
-let ytReady = false;
-let applyingRemoteYT = false;
 
-window.onYouTubeIframeAPIReady = () => {
+let ytReady =
+  false;
 
-  ytPlayer = new YT.Player(
-    "youtubePlayer",
-    {
-      height: "100%",
-      width: "100%",
+let applyingRemoteYT =
+  false;
 
-      playerVars: {
-        playsinline: 1,
-        rel: 0
-      },
 
-      events: {
+window.onYouTubeIframeAPIReady =
+  () => {
 
-        onReady() {
-          ytReady = true;
-        },
+    ytPlayer =
+      new YT.Player(
+        "youtubePlayer",
+        {
 
-        onStateChange(event) {
+          height:
+            "100%",
 
-          if (applyingRemoteYT) return;
+          width:
+            "100%",
 
-          if (
-            event.data !== YT.PlayerState.PLAYING &&
-            event.data !== YT.PlayerState.PAUSED
-          ) {
-            return;
+          playerVars: {
+
+            playsinline: 1,
+
+            rel: 0
+
+          },
+
+          events: {
+
+            onReady() {
+
+              ytReady =
+                true;
+
+            },
+
+
+            onStateChange(event) {
+
+              if (
+                applyingRemoteYT
+              ) {
+
+                return;
+
+              }
+
+
+              if (
+                event.data !==
+                  YT.PlayerState.PLAYING
+                &&
+                event.data !==
+                  YT.PlayerState.PAUSED
+              ) {
+
+                return;
+
+              }
+
+
+              send({
+
+                type:
+                  "yt-state",
+
+                state:
+                  event.data,
+
+                time:
+                  ytPlayer.getCurrentTime()
+
+              });
+
+            },
+
+
+            onAutoplayBlocked() {
+
+              if (IS_NATALYA) {
+
+                $("ytStatus").textContent =
+                  "Нажмите ▶ один раз для запуска видео.";
+
+              }
+
+            }
+
           }
 
-          send({
-            type: "yt-state",
-            state: event.data,
-            time: ytPlayer.getCurrentTime()
-          });
-        },
-
-        onAutoplayBlocked() {
-
-          if (IS_NATALYA) {
-            ytStatus.textContent =
-              "Нажмите ▶ один раз для запуска видео.";
-          }
         }
-      }
-    }
-  );
-};
+      );
+
+  };
+
 
 const youtubeScript =
-  document.createElement("script");
+  document.createElement(
+    "script"
+  );
+
 
 youtubeScript.src =
   "https://www.youtube.com/iframe_api";
 
-document.head.appendChild(youtubeScript);
+
+document.head.appendChild(
+  youtubeScript
+);
+
 
 function extractYoutubeId(value) {
 
   try {
 
-    const url = new URL(value);
+    const url =
+      new URL(value);
 
-    if (url.hostname.includes("youtu.be")) {
-      return url.pathname.slice(1);
+
+    if (
+      url.hostname.includes(
+        "youtu.be"
+      )
+    ) {
+
+      return url.pathname
+        .slice(1)
+        .split("/")[0];
+
     }
 
-    if (url.searchParams.get("v")) {
-      return url.searchParams.get("v");
+
+    if (
+      url.searchParams.get("v")
+    ) {
+
+      return url.searchParams.get(
+        "v"
+      );
+
     }
 
-    const match =
-      url.pathname.match(/\/shorts\/([^/?]+)/);
 
-    if (match) return match[1];
+    const shorts =
+      url.pathname.match(
+        /\/shorts\/([^/?]+)/
+      );
+
+
+    if (shorts) {
+
+      return shorts[1];
+
+    }
+
+
+    const embed =
+      url.pathname.match(
+        /\/embed\/([^/?]+)/
+      );
+
+
+    if (embed) {
+
+      return embed[1];
+
+    }
 
   } catch {}
 
-  if (/^[a-zA-Z0-9_-]{11}$/.test(value)) {
+
+  if (
+    /^[a-zA-Z0-9_-]{11}$/.test(
+      value
+    )
+  ) {
+
     return value;
+
   }
+
 
   return null;
+
 }
 
-loadYoutube.onclick = () => {
 
-  if (!ytReady) return;
+$("loadYoutube").onclick =
+  () => {
 
-  const id =
-    extractYoutubeId(youtubeUrl.value.trim());
+    if (!ytReady) {
 
-  if (!id) {
-    ytStatus.textContent = L.invalidYoutube;
-    return;
-  }
+      return;
 
-  applyingRemoteYT = true;
+    }
 
-  ytPlayer.cueVideoById(id);
 
-  setTimeout(() => {
-    applyingRemoteYT = false;
-  }, 700);
+    const id =
+      extractYoutubeId(
+        $("youtubeUrl")
+          .value
+          .trim()
+      );
 
-  send({
-    type: "yt-load",
-    videoId: id,
-    time: 0
-  });
 
-  ytStatus.textContent =
-    L.youtubeLoaded;
-};
+    if (!id) {
+
+      $("ytStatus").textContent =
+        L.invalidYoutube;
+
+      return;
+
+    }
+
+
+    applyingRemoteYT =
+      true;
+
+
+    ytPlayer.cueVideoById(
+      id
+    );
+
+
+    setTimeout(
+      () => {
+
+        applyingRemoteYT =
+          false;
+
+      },
+      700
+    );
+
+
+    send({
+
+      type:
+        "yt-load",
+
+      videoId:
+        id,
+
+      time:
+        0
+
+    });
+
+
+    $("ytStatus").textContent =
+      L.youtubeLoaded;
+
+  };
+
 
 function receiveYoutubeLoad(msg) {
 
   if (!ytReady) {
+
     setTimeout(
-      () => receiveYoutubeLoad(msg),
-      500
+      () =>
+        receiveYoutubeLoad(msg),
+      400
     );
+
     return;
+
   }
 
-  applyingRemoteYT = true;
+
+  applyingRemoteYT =
+    true;
+
 
   ytPlayer.cueVideoById({
-    videoId: msg.videoId,
-    startSeconds: msg.time || 0
+
+    videoId:
+      msg.videoId,
+
+    startSeconds:
+      msg.time || 0
+
   });
 
-  setTimeout(() => {
-    applyingRemoteYT = false;
-  }, 700);
+
+  setTimeout(
+    () => {
+
+      applyingRemoteYT =
+        false;
+
+    },
+    700
+  );
+
 }
+
 
 function receiveYoutubeState(msg) {
 
-  if (!ytReady) return;
+  if (!ytReady) {
 
-  applyingRemoteYT = true;
+    return;
+
+  }
+
+
+  applyingRemoteYT =
+    true;
+
 
   const current =
-    ytPlayer.getCurrentTime() || 0;
+    ytPlayer.getCurrentTime()
+    || 0;
+
 
   if (
-    Math.abs(current - msg.time) > 1.2
+    Math.abs(
+      current - msg.time
+    ) > 1.2
   ) {
-    ytPlayer.seekTo(msg.time, true);
+
+    ytPlayer.seekTo(
+      msg.time,
+      true
+    );
+
   }
 
+
   if (
-    msg.state === YT.PlayerState.PLAYING
+    msg.state ===
+      YT.PlayerState.PLAYING
   ) {
+
     ytPlayer.playVideo();
+
   }
+
 
   if (
-    msg.state === YT.PlayerState.PAUSED
+    msg.state ===
+      YT.PlayerState.PAUSED
   ) {
+
     ytPlayer.pauseVideo();
+
   }
 
-  setTimeout(() => {
-    applyingRemoteYT = false;
-  }, 700);
+
+  setTimeout(
+    () => {
+
+      applyingRemoteYT =
+        false;
+
+    },
+    700
+  );
+
 }
 
-/* correction every few seconds */
 
-setInterval(() => {
+/*
+Nebur sirve como reloj principal
+cada 4 segundos.
+*/
 
-  if (
-    !ytReady ||
-    !IS_NEBUR ||
-    ytPlayer.getPlayerState()
-      !== YT.PlayerState.PLAYING
-  ) return;
+setInterval(
+  () => {
 
-  send({
-    type: "yt-state",
-    state: YT.PlayerState.PLAYING,
-    time: ytPlayer.getCurrentTime()
-  });
+    if (
+      !IS_NEBUR ||
+      !ytReady ||
+      !ytPlayer
+    ) {
 
-}, 4000);
+      return;
 
-/* -------------------------
-   WEBRTC SCREEN SHARE
-------------------------- */
+    }
+
+
+    if (
+      ytPlayer.getPlayerState()
+      !==
+      YT.PlayerState.PLAYING
+    ) {
+
+      return;
+
+    }
+
+
+    send({
+
+      type:
+        "yt-state",
+
+      state:
+        YT.PlayerState.PLAYING,
+
+      time:
+        ytPlayer.getCurrentTime()
+
+    });
+
+  },
+  4000
+);
+
+
+/* =========================================================
+   WEBRTC
+========================================================= */
 
 const ICE_SERVERS = [
+
   {
     urls:
       "stun:stun.l.google.com:19302"
   }
 
-  /*
-  Más adelante podemos añadir TURN aquí:
-
-  {
-    urls: "turn:TU_SERVIDOR:3478",
-    username: "...",
-    credential: "..."
-  }
-  */
 ];
 
-let peer = null;
-let localScreenStream = null;
 
-function createPeer() {
+const peers =
+  new Map();
 
-  if (peer) {
-    peer.close();
+
+const pendingIce =
+  new Map();
+
+
+function closePeer(channel) {
+
+  const pc =
+    peers.get(channel);
+
+
+  if (pc) {
+
+    try {
+
+      pc.close();
+
+    } catch {}
+
   }
 
-  peer = new RTCPeerConnection({
-    iceServers: ICE_SERVERS
-  });
 
-  peer.onicecandidate = event => {
+  peers.delete(channel);
 
-    if (!event.candidate) return;
+  pendingIce.delete(channel);
 
-    send({
-      type: "rtc-ice",
-      candidate: event.candidate
-    });
-  };
-
-  peer.ontrack = event => {
-
-    const stream = event.streams[0];
-
-    if (!stream) return;
-
-    screenVideo.srcObject = stream;
-
-    screenVideo.play().catch(() => {});
-
-    screenStatus.textContent =
-      L.remoteSharing;
-  };
-
-  peer.onconnectionstatechange = () => {
-
-    const state =
-      peer.connectionState;
-
-    if (
-      state === "failed" ||
-      state === "disconnected"
-    ) {
-      screenStatus.textContent =
-        L.connecting;
-    }
-  };
-
-  return peer;
 }
 
-shareScreen.onclick = async () => {
 
-  if (!IS_NEBUR) return;
+function createPeer(
+  channel,
+  onTrack
+) {
 
-  try {
+  closePeer(channel);
 
-    localScreenStream =
-      await navigator.mediaDevices
-        .getDisplayMedia({
-          video: true,
-          audio: true
-        });
 
-    createPeer();
+  const pc =
+    new RTCPeerConnection({
 
-    for (
-      const track
-      of localScreenStream.getTracks()
-    ) {
-      peer.addTrack(
-        track,
-        localScreenStream
-      );
-    }
+      iceServers:
+        ICE_SERVERS
 
-    /* local preview */
-    screenVideo.srcObject =
-      localScreenStream;
-
-    screenVideo.muted = true;
-
-    const videoTrack =
-      localScreenStream
-        .getVideoTracks()[0];
-
-    if (videoTrack) {
-
-      videoTrack.onended = () => {
-        stopSharing();
-      };
-    }
-
-    const offer =
-      await peer.createOffer();
-
-    await peer.setLocalDescription(
-      offer
-    );
-
-    send({
-      type: "rtc-offer",
-      sdp: peer.localDescription
     });
 
-    shareScreen.disabled = true;
-    stopScreen.disabled = false;
 
-    screenStatus.textContent =
-      L.sharing;
+  peers.set(
+    channel,
+    pc
+  );
 
-  } catch (error) {
 
-    console.error(error);
+  pc.onicecandidate =
+    event => {
 
-    screenStatus.textContent =
-      L.shareError;
+      if (
+        !event.candidate
+      ) {
+
+        return;
+
+      }
+
+
+      send({
+
+        type:
+          "rtc-ice",
+
+        channel,
+
+        candidate:
+          event.candidate
+
+      });
+
+    };
+
+
+  pc.ontrack =
+    event => {
+
+      if (onTrack) {
+
+        onTrack(event);
+
+      }
+
+    };
+
+
+  return pc;
+
+}
+
+
+async function flushIce(
+  channel
+) {
+
+  const pc =
+    peers.get(channel);
+
+
+  if (!pc) {
+
+    return;
+
   }
-};
 
-stopScreen.onclick = stopSharing;
+
+  const list =
+    pendingIce.get(channel)
+    || [];
+
+
+  for (
+    const candidate
+    of list
+  ) {
+
+    try {
+
+      await pc.addIceCandidate(
+        candidate
+      );
+
+    } catch {}
+
+  }
+
+
+  pendingIce.set(
+    channel,
+    []
+  );
+
+}
+
+
+/* =========================================================
+   SCREEN SHARE
+========================================================= */
+
+let localScreenStream =
+  null;
+
+
+$("shareScreen").onclick =
+  async () => {
+
+    if (!IS_NEBUR) {
+
+      return;
+
+    }
+
+
+    try {
+
+      localScreenStream =
+        await navigator
+          .mediaDevices
+          .getDisplayMedia({
+
+            video: true,
+
+            audio: true
+
+          });
+
+
+      const pc =
+        createPeer(
+          "screen"
+        );
+
+
+      for (
+        const track
+        of localScreenStream
+          .getTracks()
+      ) {
+
+        pc.addTrack(
+          track,
+          localScreenStream
+        );
+
+      }
+
+
+      $("screenVideo").srcObject =
+        localScreenStream;
+
+      $("screenVideo").muted =
+        true;
+
+
+      const videoTrack =
+        localScreenStream
+          .getVideoTracks()[0];
+
+
+      if (videoTrack) {
+
+        videoTrack.onended =
+          stopSharing;
+
+      }
+
+
+      const offer =
+        await pc.createOffer();
+
+
+      await pc.setLocalDescription(
+        offer
+      );
+
+
+      send({
+
+        type:
+          "rtc-offer",
+
+        channel:
+          "screen",
+
+        sdp:
+          pc.localDescription
+
+      });
+
+
+      $("shareScreen").disabled =
+        true;
+
+      $("stopScreen").disabled =
+        false;
+
+
+      $("screenStatus").textContent =
+        L.sharing;
+
+    } catch (error) {
+
+      console.error(
+        error
+      );
+
+
+      $("screenStatus").textContent =
+        L.screenError;
+
+    }
+
+  };
+
+
+$("stopScreen").onclick =
+  stopSharing;
+
 
 function stopSharing() {
 
-  if (localScreenStream) {
+  if (
+    localScreenStream
+  ) {
 
     for (
       const track
-      of localScreenStream.getTracks()
+      of localScreenStream
+        .getTracks()
     ) {
+
       track.stop();
+
     }
 
-    localScreenStream = null;
   }
 
-  if (peer) {
-    peer.close();
-    peer = null;
-  }
 
-  screenVideo.srcObject = null;
+  localScreenStream =
+    null;
 
-  shareScreen.disabled = false;
-  stopScreen.disabled = true;
 
-  screenStatus.textContent =
-    L.stopped;
+  closePeer(
+    "screen"
+  );
+
+
+  $("screenVideo").srcObject =
+    null;
+
+
+  $("shareScreen").disabled =
+    false;
+
+  $("stopScreen").disabled =
+    true;
+
+
+  $("screenStatus").textContent =
+    L.screenStopped;
+
 
   send({
-    type: "screen-stop"
+
+    type:
+      "screen-stop"
+
   });
+
 }
 
-async function receiveOffer(sdp) {
 
-  createPeer();
+function stopRemoteScreen() {
 
-  await peer.setRemoteDescription(
-    new RTCSessionDescription(sdp)
+  closePeer(
+    "screen"
   );
 
-  const answer =
-    await peer.createAnswer();
 
-  await peer.setLocalDescription(
-    answer
-  );
+  $("screenVideo").srcObject =
+    null;
 
-  send({
-    type: "rtc-answer",
-    sdp: peer.localDescription
-  });
+
+  $("screenStatus").textContent =
+    L.screenStopped;
+
 }
 
-async function receiveAnswer(sdp) {
 
-  if (!peer) return;
+/* =========================================================
+   CAMERA + MICROPHONE
+========================================================= */
 
-  await peer.setRemoteDescription(
-    new RTCSessionDescription(sdp)
-  );
-}
+let micEnabled =
+  false;
 
-async function receiveIce(candidate) {
+let cameraEnabled =
+  false;
 
-  if (!peer || !candidate) return;
+let localMediaStream =
+  null;
+
+
+async function toggleMicrophone() {
+
+  const previous =
+    micEnabled;
+
+
+  micEnabled =
+    !micEnabled;
+
 
   try {
 
-    await peer.addIceCandidate(
-      new RTCIceCandidate(candidate)
+    await restartOutgoingMedia();
+
+  } catch {
+
+    micEnabled =
+      previous;
+
+    updateMediaButtons();
+
+  }
+
+}
+
+
+async function toggleCamera() {
+
+  const previous =
+    cameraEnabled;
+
+
+  cameraEnabled =
+    !cameraEnabled;
+
+
+  try {
+
+    await restartOutgoingMedia();
+
+  } catch {
+
+    cameraEnabled =
+      previous;
+
+    updateMediaButtons();
+
+  }
+
+}
+
+
+$("micButton").onclick =
+  toggleMicrophone;
+
+
+$("cameraButton").onclick =
+  toggleCamera;
+
+
+function updateMediaButtons() {
+
+  $("micButton").textContent =
+    micEnabled
+      ? L.micOn
+      : L.micOff;
+
+
+  $("cameraButton").textContent =
+    cameraEnabled
+      ? L.cameraOn
+      : L.cameraOff;
+
+
+  $("micButton").classList.toggle(
+    "active",
+    micEnabled
+  );
+
+
+  $("cameraButton").classList.toggle(
+    "active",
+    cameraEnabled
+  );
+
+}
+
+
+function stopLocalMediaTracks() {
+
+  if (
+    localMediaStream
+  ) {
+
+    for (
+      const track
+      of localMediaStream
+        .getTracks()
+    ) {
+
+      track.stop();
+
+    }
+
+  }
+
+
+  localMediaStream =
+    null;
+
+
+  $("localMediaVideo").srcObject =
+    null;
+
+}
+
+
+async function restartOutgoingMedia() {
+
+  stopLocalMediaTracks();
+
+
+  closePeer(
+    MEDIA_CHANNEL
+  );
+
+
+  /*
+  Decimos al otro que cierre
+  la conexión anterior.
+  */
+
+  send({
+
+    type:
+      "media-stop",
+
+    channel:
+      MEDIA_CHANNEL
+
+  });
+
+
+  if (
+    !micEnabled &&
+    !cameraEnabled
+  ) {
+
+    $("localPreview").hidden =
+      true;
+
+
+    $("callStatus").textContent =
+      L.callOff;
+
+
+    updateMediaButtons();
+
+    return;
+
+  }
+
+
+  try {
+
+    localMediaStream =
+      await navigator
+        .mediaDevices
+        .getUserMedia({
+
+          audio:
+            micEnabled,
+
+          video:
+            cameraEnabled
+              ? {
+                  facingMode:
+                    "user"
+                }
+              : false
+
+        });
+
+  } catch (error) {
+
+    console.error(
+      error
+    );
+
+
+    $("callStatus").textContent =
+      L.permissionError;
+
+
+    throw error;
+
+  }
+
+
+  $("localMediaVideo").srcObject =
+    localMediaStream;
+
+
+  $("localPreview").hidden =
+    !cameraEnabled;
+
+
+  const pc =
+    createPeer(
+      MEDIA_CHANNEL
+    );
+
+
+  for (
+    const track
+    of localMediaStream
+      .getTracks()
+  ) {
+
+    pc.addTrack(
+      track,
+      localMediaStream
+    );
+
+  }
+
+
+  const offer =
+    await pc.createOffer();
+
+
+  await pc.setLocalDescription(
+    offer
+  );
+
+
+  send({
+
+    type:
+      "rtc-offer",
+
+    channel:
+      MEDIA_CHANNEL,
+
+    sdp:
+      pc.localDescription
+
+  });
+
+
+  $("callStatus").textContent =
+    L.callLive;
+
+
+  updateMediaButtons();
+
+}
+
+
+/* =========================================================
+   RECEIVE RTC OFFER
+========================================================= */
+
+async function receiveRtcOffer(
+  channel,
+  sdp
+) {
+
+  if (
+    !channel ||
+    !sdp
+  ) {
+
+    return;
+
+  }
+
+
+  let onTrack =
+    null;
+
+
+  if (
+    channel === "screen"
+  ) {
+
+    onTrack =
+      event => {
+
+        const stream =
+          event.streams[0];
+
+
+        if (!stream) {
+
+          return;
+
+        }
+
+
+        $("screenVideo").srcObject =
+          stream;
+
+
+        $("screenVideo")
+          .play()
+          .catch(() => {});
+
+
+        $("screenStatus").textContent =
+          L.remoteSharing;
+
+      };
+
+  }
+
+
+  if (
+    channel ===
+      REMOTE_MEDIA_CHANNEL
+  ) {
+
+    onTrack =
+      event => {
+
+        const stream =
+          event.streams[0];
+
+
+        if (!stream) {
+
+          return;
+
+        }
+
+
+        $("remoteMediaVideo")
+          .srcObject =
+            stream;
+
+
+        $("emptyCall").style.display =
+          "none";
+
+
+        $("remoteMediaVideo")
+          .play()
+          .catch(() => {});
+
+
+        $("callStatus").textContent =
+          L.callLive;
+
+      };
+
+  }
+
+
+  const pc =
+    createPeer(
+      channel,
+      onTrack
+    );
+
+
+  try {
+
+    await pc.setRemoteDescription(
+      new RTCSessionDescription(
+        sdp
+      )
+    );
+
+
+    await flushIce(
+      channel
+    );
+
+
+    const answer =
+      await pc.createAnswer();
+
+
+    await pc.setLocalDescription(
+      answer
+    );
+
+
+    send({
+
+      type:
+        "rtc-answer",
+
+      channel,
+
+      sdp:
+        pc.localDescription
+
+    });
+
+  } catch (error) {
+
+    console.error(
+      "RTC offer error:",
+      error
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   RECEIVE RTC ANSWER
+========================================================= */
+
+async function receiveRtcAnswer(
+  channel,
+  sdp
+) {
+
+  const pc =
+    peers.get(channel);
+
+
+  if (
+    !pc ||
+    !sdp
+  ) {
+
+    return;
+
+  }
+
+
+  try {
+
+    await pc.setRemoteDescription(
+      new RTCSessionDescription(
+        sdp
+      )
+    );
+
+
+    await flushIce(
+      channel
+    );
+
+  } catch (error) {
+
+    console.error(
+      "RTC answer error:",
+      error
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   RECEIVE ICE
+========================================================= */
+
+async function receiveRtcIce(
+  channel,
+  candidate
+) {
+
+  if (
+    !channel ||
+    !candidate
+  ) {
+
+    return;
+
+  }
+
+
+  const ice =
+    new RTCIceCandidate(
+      candidate
+    );
+
+
+  const pc =
+    peers.get(channel);
+
+
+  if (
+    !pc ||
+    !pc.remoteDescription
+  ) {
+
+    const list =
+      pendingIce.get(channel)
+      || [];
+
+
+    list.push(
+      ice
+    );
+
+
+    pendingIce.set(
+      channel,
+      list
+    );
+
+
+    return;
+
+  }
+
+
+  try {
+
+    await pc.addIceCandidate(
+      ice
     );
 
   } catch (error) {
 
     console.warn(
-      "ICE candidate error",
+      "ICE error:",
       error
     );
-  }
-}
 
-function stopRemoteScreen() {
-
-  if (peer) {
-    peer.close();
-    peer = null;
   }
 
-  screenVideo.srcObject = null;
-
-  screenStatus.textContent =
-    L.stopped;
 }
+
+
+/* =========================================================
+   REMOTE MEDIA STOP
+========================================================= */
+
+function stopRemoteMedia(
+  channel
+) {
+
+  if (
+    channel !==
+      REMOTE_MEDIA_CHANNEL
+  ) {
+
+    return;
+
+  }
+
+
+  closePeer(
+    channel
+  );
+
+
+  $("remoteMediaVideo").srcObject =
+    null;
+
+
+  $("emptyCall").style.display =
+    "flex";
+
+
+  $("callStatus").textContent =
+    L.remoteMediaStopped;
+
+}
+
+
+/* =========================================================
+   ENABLE SOUND
+========================================================= */
+
+$("enableSound").onclick =
+  async () => {
+
+    const videos = [
+
+      $("screenVideo"),
+
+      $("remoteMediaVideo")
+
+    ];
+
+
+    for (
+      const video
+      of videos
+    ) {
+
+      if (
+        video.srcObject
+      ) {
+
+        try {
+
+          video.muted =
+            false;
+
+
+          await video.play();
+
+        } catch {}
+
+      }
+
+    }
+
+
+    $("callStatus").textContent =
+      L.soundEnabled;
+
+  };
+
+
+/* =========================================================
+   CLEANUP
+========================================================= */
+
+window.addEventListener(
+  "beforeunload",
+  () => {
+
+    stopLocalMediaTracks();
+
+
+    for (
+      const pc
+      of peers.values()
+    ) {
+
+      try {
+
+        pc.close();
+
+      } catch {}
+
+    }
+
+  }
+);
 
 </script>
 
