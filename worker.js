@@ -5,6 +5,12 @@ export default {
     const url = new URL(request.url);
 
     if (url.pathname === "/ws") {
+      if (request.headers.get("Upgrade") !== "websocket") {
+        return new Response("WebSocket required", {
+          status: 426
+        });
+      }
+
       const id = env.MOVIE_ROOM.idFromName("moscow-samara");
       return env.MOVIE_ROOM.get(id).fetch(request);
     }
@@ -21,46 +27,38 @@ export class MovieRoom extends DurableObject {
 
   async fetch(request) {
     const url = new URL(request.url);
-
-    if (request.headers.get("Upgrade") !== "websocket") {
-      return new Response("WebSocket required", { status: 426 });
-    }
-
     const user = url.searchParams.get("user");
 
     if (!["nebur", "natalya"].includes(user)) {
-      return new Response("Invalid user", { status: 400 });
+      return new Response("Invalid user", {
+        status: 400
+      });
+    }
+
+    /*
+      Si el mismo usuario recarga la página,
+      cerramos su conexión anterior.
+      Esto evita conexiones fantasma.
+    */
+    for (const ws of this.ctx.getWebSockets()) {
+      try {
+        const info = ws.deserializeAttachment();
+
+        if (info?.user === user) {
+          ws.close(1000, "Replaced by new connection");
+        }
+      } catch {}
     }
 
     const pair = new WebSocketPair();
     const client = pair[0];
     const server = pair[1];
 
-    const existing = this.ctx.getWebSockets();
-
-    const roleAlreadyConnected = existing.some(ws => {
-      try {
-        return ws.deserializeAttachment()?.user === user;
-      } catch {
-        return false;
-      }
-    });
-
     this.ctx.acceptWebSocket(server);
-    server.serializeAttachment({ user });
 
-    if (roleAlreadyConnected) {
-      server.send(JSON.stringify({
-        type: "error",
-        code: "already-connected"
-      }));
-      server.close(1000, "Already connected");
-
-      return new Response(null, {
-        status: 101,
-        webSocket: client
-      });
-    }
+    server.serializeAttachment({
+      user
+    });
 
     server.send(JSON.stringify({
       type: "welcome",
@@ -84,39 +82,54 @@ export class MovieRoom extends DurableObject {
       return;
     }
 
-    const sender = ws.deserializeAttachment()?.user;
+    let sender = null;
+
+    try {
+      sender = ws.deserializeAttachment()?.user;
+    } catch {}
 
     data.from = sender;
 
+    /*
+      Enviamos solamente al otro usuario.
+    */
     for (const socket of this.ctx.getWebSockets()) {
-      const receiver = socket.deserializeAttachment()?.user;
+      try {
+        const receiver =
+          socket.deserializeAttachment()?.user;
 
-      if (receiver !== sender) {
-        try {
+        if (receiver && receiver !== sender) {
           socket.send(JSON.stringify(data));
-        } catch {}
-      }
+        }
+      } catch {}
     }
   }
 
   webSocketClose() {
-    setTimeout(() => this.broadcastPresence(), 150);
+    setTimeout(() => {
+      this.broadcastPresence();
+    }, 100);
   }
 
   webSocketError() {
-    setTimeout(() => this.broadcastPresence(), 150);
+    setTimeout(() => {
+      this.broadcastPresence();
+    }, 100);
   }
 
   broadcastPresence() {
-    const users = this.ctx.getWebSockets()
-      .map(ws => {
-        try {
-          return ws.deserializeAttachment()?.user;
-        } catch {
-          return null;
+    const users = [];
+
+    for (const socket of this.ctx.getWebSockets()) {
+      try {
+        const user =
+          socket.deserializeAttachment()?.user;
+
+        if (user && !users.includes(user)) {
+          users.push(user);
         }
-      })
-      .filter(Boolean);
+      } catch {}
+    }
 
     const message = JSON.stringify({
       type: "presence",
