@@ -6,7 +6,9 @@
   "assets": {
     "directory": "./public",
     "binding": "ASSETS",
-    "run_worker_first": ["/ws"]
+    "run_worker_first": [
+      "/ws"
+    ]
   },
 
   "durable_objects": {
@@ -21,7 +23,9 @@
   "migrations": [
     {
       "tag": "v1",
-      "new_sqlite_classes": ["MovieRoom"]
+      "new_sqlite_classes": [
+        "MovieRoom"
+      ]
     }
   ]
 }
