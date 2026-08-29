@@ -12,18 +12,24 @@ export default {
       }
 
       const id = env.MOVIE_ROOM.idFromName("moscow-samara");
-      return env.MOVIE_ROOM.get(id).fetch(request);
+      const room = env.MOVIE_ROOM.get(id);
+
+      return room.fetch(request);
     }
 
     return env.ASSETS.fetch(request);
   }
 };
 
+
 export class MovieRoom extends DurableObject {
   constructor(ctx, env) {
     super(ctx, env);
+
     this.ctx = ctx;
+    this.env = env;
   }
+
 
   async fetch(request) {
     const url = new URL(request.url);
@@ -35,22 +41,28 @@ export class MovieRoom extends DurableObject {
       });
     }
 
+
     /*
-      Si el mismo usuario recarga la página,
+      Si el mismo usuario vuelve a entrar,
       cerramos su conexión anterior.
-      Esto evita conexiones fantasma.
     */
-    for (const ws of this.ctx.getWebSockets()) {
+
+    for (const socket of this.ctx.getWebSockets()) {
       try {
-        const info = ws.deserializeAttachment();
+        const info = socket.deserializeAttachment();
 
         if (info?.user === user) {
-          ws.close(1000, "Replaced by new connection");
+          socket.close(
+            1000,
+            "Replaced by newer connection"
+          );
         }
       } catch {}
     }
 
+
     const pair = new WebSocketPair();
+
     const client = pair[0];
     const server = pair[1];
 
@@ -60,18 +72,24 @@ export class MovieRoom extends DurableObject {
       user
     });
 
-    server.send(JSON.stringify({
-      type: "welcome",
-      user
-    }));
+
+    server.send(
+      JSON.stringify({
+        type: "welcome",
+        user
+      })
+    );
+
 
     this.broadcastPresence();
+
 
     return new Response(null, {
       status: 101,
       webSocket: client
     });
   }
+
 
   webSocketMessage(ws, message) {
     let data;
@@ -82,59 +100,82 @@ export class MovieRoom extends DurableObject {
       return;
     }
 
+
     let sender = null;
 
     try {
-      sender = ws.deserializeAttachment()?.user;
+      sender =
+        ws.deserializeAttachment()?.user;
     } catch {}
+
 
     data.from = sender;
 
+
     /*
-      Enviamos solamente al otro usuario.
+      Todo lo que manda Nebur va a Natalya
+      y viceversa.
     */
+
     for (const socket of this.ctx.getWebSockets()) {
       try {
         const receiver =
           socket.deserializeAttachment()?.user;
 
-        if (receiver && receiver !== sender) {
-          socket.send(JSON.stringify(data));
+        if (
+          receiver &&
+          receiver !== sender
+        ) {
+          socket.send(
+            JSON.stringify(data)
+          );
         }
       } catch {}
     }
   }
 
+
   webSocketClose() {
-    setTimeout(() => {
-      this.broadcastPresence();
-    }, 100);
+    setTimeout(
+      () => this.broadcastPresence(),
+      100
+    );
   }
 
+
   webSocketError() {
-    setTimeout(() => {
-      this.broadcastPresence();
-    }, 100);
+    setTimeout(
+      () => this.broadcastPresence(),
+      100
+    );
   }
+
 
   broadcastPresence() {
     const users = [];
+
 
     for (const socket of this.ctx.getWebSockets()) {
       try {
         const user =
           socket.deserializeAttachment()?.user;
 
-        if (user && !users.includes(user)) {
+        if (
+          user &&
+          !users.includes(user)
+        ) {
           users.push(user);
         }
       } catch {}
     }
 
-    const message = JSON.stringify({
-      type: "presence",
-      users
-    });
+
+    const message =
+      JSON.stringify({
+        type: "presence",
+        users
+      });
+
 
     for (const socket of this.ctx.getWebSockets()) {
       try {
