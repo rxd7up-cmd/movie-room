@@ -1,0 +1,1064 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta
+    name="viewport"
+    content="width=device-width,initial-scale=1,viewport-fit=cover"
+  >
+
+  <title>Moscow ↔ Samara</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    :root {
+      font-family:
+        Inter,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+
+      background: #08090b;
+      color: #f4f4f4;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at 50% -10%, #252830 0, transparent 35%),
+        #08090b;
+    }
+
+    button,
+    input {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .app {
+      max-width: 1100px;
+      margin: auto;
+      padding:
+        max(20px, env(safe-area-inset-top))
+        16px
+        max(30px, env(safe-area-inset-bottom));
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+      margin-bottom: 22px;
+    }
+
+    .eyebrow {
+      font-size: 12px;
+      letter-spacing: .15em;
+      opacity: .55;
+    }
+
+    h1 {
+      margin: 4px 0 0;
+      font-size: clamp(24px, 5vw, 38px);
+    }
+
+    .presence {
+      display: flex;
+      gap: 10px;
+      font-size: 13px;
+    }
+
+    .person {
+      padding: 8px 11px;
+      border: 1px solid #303239;
+      border-radius: 999px;
+      opacity: .5;
+    }
+
+    .person.online {
+      opacity: 1;
+      border-color: #60646d;
+    }
+
+    .person.online::before {
+      content: "●";
+      margin-right: 6px;
+    }
+
+    nav {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 18px;
+    }
+
+    nav button {
+      flex: 1;
+      border: 1px solid #2a2c31;
+      border-radius: 12px;
+      background: #131519;
+      color: inherit;
+      padding: 13px;
+    }
+
+    nav button.active {
+      background: #f4f4f4;
+      color: #111;
+    }
+
+    .panel {
+      display: none;
+    }
+
+    .panel.active {
+      display: block;
+    }
+
+    .videoShell {
+      position: relative;
+      overflow: hidden;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      border: 1px solid #292c32;
+      border-radius: 18px;
+      background: #000;
+    }
+
+    #youtubePlayer,
+    #youtubePlayer iframe,
+    #screenVideo {
+      width: 100%;
+      height: 100%;
+    }
+
+    #screenVideo {
+      display: block;
+      object-fit: contain;
+      background: black;
+    }
+
+    .controls {
+      display: flex;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .controls input {
+      flex: 1;
+      min-width: 0;
+      border: 1px solid #303239;
+      border-radius: 12px;
+      background: #121418;
+      color: white;
+      padding: 13px 14px;
+    }
+
+    .primary,
+    .secondary {
+      border-radius: 12px;
+      padding: 12px 16px;
+    }
+
+    .primary {
+      border: 0;
+      background: white;
+      color: #111;
+      font-weight: 700;
+    }
+
+    .secondary {
+      border: 1px solid #303239;
+      background: #15171b;
+      color: white;
+    }
+
+    .screenActions {
+      display: flex;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .status {
+      min-height: 22px;
+      margin-top: 12px;
+      font-size: 13px;
+      opacity: .65;
+    }
+
+    .iphoneNotice {
+      display: none;
+      margin: 12px 0;
+      padding: 12px;
+      border: 1px solid #343840;
+      border-radius: 12px;
+      background: #15171c;
+      font-size: 14px;
+      line-height: 1.4;
+    }
+
+    .rolePicker {
+      display: none;
+      max-width: 420px;
+      margin: 100px auto;
+      text-align: center;
+    }
+
+    .rolePicker h2 {
+      margin-bottom: 24px;
+    }
+
+    .rolePicker button {
+      display: block;
+      width: 100%;
+      margin-top: 12px;
+      padding: 15px;
+      border: 0;
+      border-radius: 13px;
+      font-weight: 700;
+    }
+
+    @media (max-width: 600px) {
+      header {
+        display: block;
+      }
+
+      .presence {
+        margin-top: 14px;
+      }
+
+      .controls {
+        flex-direction: column;
+      }
+
+      .screenActions {
+        flex-direction: column;
+      }
+
+      .primary,
+      .secondary {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<div id="rolePicker" class="rolePicker">
+  <h2>Moscow ↔ Samara</h2>
+
+  <button onclick="chooseUser('nebur')">
+    Nebur · Español
+  </button>
+
+  <button onclick="chooseUser('natalya')">
+    Наталья · Русский
+  </button>
+</div>
+
+<main id="app" class="app" hidden>
+
+  <header>
+    <div>
+      <div class="eyebrow">PRIVATE ROOM</div>
+      <h1>Moscow ↔ Samara</h1>
+    </div>
+
+    <div class="presence">
+      <span id="neburPresence" class="person">
+        Nebur
+      </span>
+
+      <span id="natalyaPresence" class="person">
+        Наталья
+      </span>
+    </div>
+  </header>
+
+  <nav>
+    <button
+      id="youtubeTab"
+      class="active"
+      onclick="showPanel('youtube')"
+    ></button>
+
+    <button
+      id="screenTab"
+      onclick="showPanel('screen')"
+    ></button>
+  </nav>
+
+  <!-- YOUTUBE -->
+
+  <section id="youtubePanel" class="panel active">
+
+    <div class="videoShell">
+      <div id="youtubePlayer"></div>
+    </div>
+
+    <div id="youtubeControls" class="controls">
+      <input
+        id="youtubeUrl"
+        type="text"
+        placeholder=""
+        autocomplete="off"
+      >
+
+      <button
+        id="loadYoutube"
+        class="primary"
+      ></button>
+    </div>
+
+    <div id="ytStatus" class="status"></div>
+
+  </section>
+
+  <!-- SCREEN SHARE -->
+
+  <section id="screenPanel" class="panel">
+
+    <div id="iphoneNotice" class="iphoneNotice"></div>
+
+    <div class="videoShell">
+      <video
+        id="screenVideo"
+        autoplay
+        playsinline
+        controls
+      ></video>
+    </div>
+
+    <div id="hostScreenControls" class="screenActions">
+
+      <button
+        id="shareScreen"
+        class="primary"
+      ></button>
+
+      <button
+        id="stopScreen"
+        class="secondary"
+        disabled
+      ></button>
+
+    </div>
+
+    <div id="screenStatus" class="status"></div>
+
+  </section>
+
+</main>
+
+<script>
+
+const params = new URLSearchParams(location.search);
+const USER = params.get("user");
+
+const IS_NEBUR = USER === "nebur";
+const IS_NATALYA = USER === "natalya";
+
+if (!IS_NEBUR && !IS_NATALYA) {
+  document.getElementById("rolePicker").style.display = "block";
+} else {
+  document.getElementById("app").hidden = false;
+}
+
+function chooseUser(user) {
+  location.search = "?user=" + user;
+}
+
+/* -------------------------
+   LANGUAGE
+------------------------- */
+
+const TEXT = {
+
+  es: {
+    youtube: "YouTube juntos",
+    screen: "Compartir pantalla",
+
+    youtubePlaceholder: "Pega un enlace de YouTube…",
+    load: "Ver juntos",
+
+    share: "Compartir pantalla + audio",
+    stop: "Dejar de compartir",
+
+    connecting: "Conectando…",
+    connected: "Sala conectada ✓",
+
+    waiting:
+      "Esperando a Natalya…",
+
+    youtubeLoaded:
+      "Vídeo enviado a Natalya ✓",
+
+    sharing:
+      "Estás compartiendo tu pantalla.",
+
+    stopped:
+      "Has dejado de compartir.",
+
+    shareError:
+      "No se pudo compartir la pantalla.",
+
+    remoteSharing:
+      "Natalya está compartiendo.",
+
+    invalidYoutube:
+      "No pude reconocer ese enlace de YouTube."
+  },
+
+  ru: {
+    youtube: "YouTube вместе",
+    screen: "Экран",
+
+    youtubePlaceholder:
+      "Ссылка на YouTube…",
+
+    load: "Смотреть вместе",
+
+    share: "Поделиться экраном и звуком",
+    stop: "Остановить трансляцию",
+
+    connecting: "Подключение…",
+    connected: "Комната подключена ✓",
+
+    waiting:
+      "Ожидание Nebur…",
+
+    youtubeLoaded:
+      "Видео синхронизировано ✓",
+
+    sharing:
+      "Идёт трансляция экрана.",
+
+    stopped:
+      "Трансляция остановлена.",
+
+    shareError:
+      "Не удалось открыть трансляцию экрана.",
+
+    remoteSharing:
+      "Nebur делится экраном.",
+
+    invalidYoutube:
+      "Не удалось распознать ссылку YouTube.",
+
+    iphone:
+      "Если видео или звук не запустятся автоматически, коснитесь кнопки ▶ на плеере один раз."
+  }
+};
+
+const L = IS_NATALYA ? TEXT.ru : TEXT.es;
+
+document.documentElement.lang = IS_NATALYA ? "ru" : "es";
+
+if (USER) {
+  youtubeTab.textContent = L.youtube;
+  screenTab.textContent = L.screen;
+
+  youtubeUrl.placeholder = L.youtubePlaceholder;
+  loadYoutube.textContent = L.load;
+
+  shareScreen.textContent = L.share;
+  stopScreen.textContent = L.stop;
+
+  ytStatus.textContent = L.connecting;
+  screenStatus.textContent = L.connecting;
+}
+
+if (IS_NATALYA) {
+  youtubeControls.style.display = "none";
+  hostScreenControls.style.display = "none";
+
+  iphoneNotice.textContent = L.iphone;
+  iphoneNotice.style.display = "block";
+}
+
+/* -------------------------
+   PANELS
+------------------------- */
+
+function showPanel(name) {
+
+  youtubePanel.classList.toggle(
+    "active",
+    name === "youtube"
+  );
+
+  screenPanel.classList.toggle(
+    "active",
+    name === "screen"
+  );
+
+  youtubeTab.classList.toggle(
+    "active",
+    name === "youtube"
+  );
+
+  screenTab.classList.toggle(
+    "active",
+    name === "screen"
+  );
+}
+
+/* -------------------------
+   WEBSOCKET
+------------------------- */
+
+let socket;
+
+function connect() {
+
+  const protocol =
+    location.protocol === "https:"
+      ? "wss:"
+      : "ws:";
+
+  socket = new WebSocket(
+    `${protocol}//${location.host}/ws?user=${USER}`
+  );
+
+  socket.onopen = () => {
+    ytStatus.textContent = L.connected;
+    screenStatus.textContent = L.connected;
+  };
+
+  socket.onmessage = event => {
+
+    let msg;
+
+    try {
+      msg = JSON.parse(event.data);
+    } catch {
+      return;
+    }
+
+    handleMessage(msg);
+  };
+
+  socket.onclose = () => {
+    ytStatus.textContent = L.connecting;
+    screenStatus.textContent = L.connecting;
+
+    setTimeout(connect, 1500);
+  };
+}
+
+function send(data) {
+  if (socket?.readyState === WebSocket.OPEN) {
+    socket.send(JSON.stringify(data));
+  }
+}
+
+function handleMessage(msg) {
+
+  if (msg.type === "presence") {
+    updatePresence(msg.users);
+    return;
+  }
+
+  if (msg.type === "yt-load") {
+    receiveYoutubeLoad(msg);
+    return;
+  }
+
+  if (msg.type === "yt-state") {
+    receiveYoutubeState(msg);
+    return;
+  }
+
+  if (msg.type === "rtc-offer") {
+    receiveOffer(msg.sdp);
+    return;
+  }
+
+  if (msg.type === "rtc-answer") {
+    receiveAnswer(msg.sdp);
+    return;
+  }
+
+  if (msg.type === "rtc-ice") {
+    receiveIce(msg.candidate);
+    return;
+  }
+
+  if (msg.type === "screen-stop") {
+    stopRemoteScreen();
+  }
+}
+
+function updatePresence(users) {
+
+  neburPresence.classList.toggle(
+    "online",
+    users.includes("nebur")
+  );
+
+  natalyaPresence.classList.toggle(
+    "online",
+    users.includes("natalya")
+  );
+
+  const other =
+    IS_NEBUR ? "natalya" : "nebur";
+
+  if (!users.includes(other)) {
+    ytStatus.textContent = L.waiting;
+  } else {
+    ytStatus.textContent = L.connected;
+  }
+}
+
+if (USER) connect();
+
+/* -------------------------
+   YOUTUBE
+------------------------- */
+
+let ytPlayer;
+let ytReady = false;
+let applyingRemoteYT = false;
+
+window.onYouTubeIframeAPIReady = () => {
+
+  ytPlayer = new YT.Player(
+    "youtubePlayer",
+    {
+      height: "100%",
+      width: "100%",
+
+      playerVars: {
+        playsinline: 1,
+        rel: 0
+      },
+
+      events: {
+
+        onReady() {
+          ytReady = true;
+        },
+
+        onStateChange(event) {
+
+          if (applyingRemoteYT) return;
+
+          if (
+            event.data !== YT.PlayerState.PLAYING &&
+            event.data !== YT.PlayerState.PAUSED
+          ) {
+            return;
+          }
+
+          send({
+            type: "yt-state",
+            state: event.data,
+            time: ytPlayer.getCurrentTime()
+          });
+        },
+
+        onAutoplayBlocked() {
+
+          if (IS_NATALYA) {
+            ytStatus.textContent =
+              "Нажмите ▶ один раз для запуска видео.";
+          }
+        }
+      }
+    }
+  );
+};
+
+const youtubeScript =
+  document.createElement("script");
+
+youtubeScript.src =
+  "https://www.youtube.com/iframe_api";
+
+document.head.appendChild(youtubeScript);
+
+function extractYoutubeId(value) {
+
+  try {
+
+    const url = new URL(value);
+
+    if (url.hostname.includes("youtu.be")) {
+      return url.pathname.slice(1);
+    }
+
+    if (url.searchParams.get("v")) {
+      return url.searchParams.get("v");
+    }
+
+    const match =
+      url.pathname.match(/\/shorts\/([^/?]+)/);
+
+    if (match) return match[1];
+
+  } catch {}
+
+  if (/^[a-zA-Z0-9_-]{11}$/.test(value)) {
+    return value;
+  }
+
+  return null;
+}
+
+loadYoutube.onclick = () => {
+
+  if (!ytReady) return;
+
+  const id =
+    extractYoutubeId(youtubeUrl.value.trim());
+
+  if (!id) {
+    ytStatus.textContent = L.invalidYoutube;
+    return;
+  }
+
+  applyingRemoteYT = true;
+
+  ytPlayer.cueVideoById(id);
+
+  setTimeout(() => {
+    applyingRemoteYT = false;
+  }, 700);
+
+  send({
+    type: "yt-load",
+    videoId: id,
+    time: 0
+  });
+
+  ytStatus.textContent =
+    L.youtubeLoaded;
+};
+
+function receiveYoutubeLoad(msg) {
+
+  if (!ytReady) {
+    setTimeout(
+      () => receiveYoutubeLoad(msg),
+      500
+    );
+    return;
+  }
+
+  applyingRemoteYT = true;
+
+  ytPlayer.cueVideoById({
+    videoId: msg.videoId,
+    startSeconds: msg.time || 0
+  });
+
+  setTimeout(() => {
+    applyingRemoteYT = false;
+  }, 700);
+}
+
+function receiveYoutubeState(msg) {
+
+  if (!ytReady) return;
+
+  applyingRemoteYT = true;
+
+  const current =
+    ytPlayer.getCurrentTime() || 0;
+
+  if (
+    Math.abs(current - msg.time) > 1.2
+  ) {
+    ytPlayer.seekTo(msg.time, true);
+  }
+
+  if (
+    msg.state === YT.PlayerState.PLAYING
+  ) {
+    ytPlayer.playVideo();
+  }
+
+  if (
+    msg.state === YT.PlayerState.PAUSED
+  ) {
+    ytPlayer.pauseVideo();
+  }
+
+  setTimeout(() => {
+    applyingRemoteYT = false;
+  }, 700);
+}
+
+/* correction every few seconds */
+
+setInterval(() => {
+
+  if (
+    !ytReady ||
+    !IS_NEBUR ||
+    ytPlayer.getPlayerState()
+      !== YT.PlayerState.PLAYING
+  ) return;
+
+  send({
+    type: "yt-state",
+    state: YT.PlayerState.PLAYING,
+    time: ytPlayer.getCurrentTime()
+  });
+
+}, 4000);
+
+/* -------------------------
+   WEBRTC SCREEN SHARE
+------------------------- */
+
+const ICE_SERVERS = [
+  {
+    urls:
+      "stun:stun.l.google.com:19302"
+  }
+
+  /*
+  Más adelante podemos añadir TURN aquí:
+
+  {
+    urls: "turn:TU_SERVIDOR:3478",
+    username: "...",
+    credential: "..."
+  }
+  */
+];
+
+let peer = null;
+let localScreenStream = null;
+
+function createPeer() {
+
+  if (peer) {
+    peer.close();
+  }
+
+  peer = new RTCPeerConnection({
+    iceServers: ICE_SERVERS
+  });
+
+  peer.onicecandidate = event => {
+
+    if (!event.candidate) return;
+
+    send({
+      type: "rtc-ice",
+      candidate: event.candidate
+    });
+  };
+
+  peer.ontrack = event => {
+
+    const stream = event.streams[0];
+
+    if (!stream) return;
+
+    screenVideo.srcObject = stream;
+
+    screenVideo.play().catch(() => {});
+
+    screenStatus.textContent =
+      L.remoteSharing;
+  };
+
+  peer.onconnectionstatechange = () => {
+
+    const state =
+      peer.connectionState;
+
+    if (
+      state === "failed" ||
+      state === "disconnected"
+    ) {
+      screenStatus.textContent =
+        L.connecting;
+    }
+  };
+
+  return peer;
+}
+
+shareScreen.onclick = async () => {
+
+  if (!IS_NEBUR) return;
+
+  try {
+
+    localScreenStream =
+      await navigator.mediaDevices
+        .getDisplayMedia({
+          video: true,
+          audio: true
+        });
+
+    createPeer();
+
+    for (
+      const track
+      of localScreenStream.getTracks()
+    ) {
+      peer.addTrack(
+        track,
+        localScreenStream
+      );
+    }
+
+    /* local preview */
+    screenVideo.srcObject =
+      localScreenStream;
+
+    screenVideo.muted = true;
+
+    const videoTrack =
+      localScreenStream
+        .getVideoTracks()[0];
+
+    if (videoTrack) {
+
+      videoTrack.onended = () => {
+        stopSharing();
+      };
+    }
+
+    const offer =
+      await peer.createOffer();
+
+    await peer.setLocalDescription(
+      offer
+    );
+
+    send({
+      type: "rtc-offer",
+      sdp: peer.localDescription
+    });
+
+    shareScreen.disabled = true;
+    stopScreen.disabled = false;
+
+    screenStatus.textContent =
+      L.sharing;
+
+  } catch (error) {
+
+    console.error(error);
+
+    screenStatus.textContent =
+      L.shareError;
+  }
+};
+
+stopScreen.onclick = stopSharing;
+
+function stopSharing() {
+
+  if (localScreenStream) {
+
+    for (
+      const track
+      of localScreenStream.getTracks()
+    ) {
+      track.stop();
+    }
+
+    localScreenStream = null;
+  }
+
+  if (peer) {
+    peer.close();
+    peer = null;
+  }
+
+  screenVideo.srcObject = null;
+
+  shareScreen.disabled = false;
+  stopScreen.disabled = true;
+
+  screenStatus.textContent =
+    L.stopped;
+
+  send({
+    type: "screen-stop"
+  });
+}
+
+async function receiveOffer(sdp) {
+
+  createPeer();
+
+  await peer.setRemoteDescription(
+    new RTCSessionDescription(sdp)
+  );
+
+  const answer =
+    await peer.createAnswer();
+
+  await peer.setLocalDescription(
+    answer
+  );
+
+  send({
+    type: "rtc-answer",
+    sdp: peer.localDescription
+  });
+}
+
+async function receiveAnswer(sdp) {
+
+  if (!peer) return;
+
+  await peer.setRemoteDescription(
+    new RTCSessionDescription(sdp)
+  );
+}
+
+async function receiveIce(candidate) {
+
+  if (!peer || !candidate) return;
+
+  try {
+
+    await peer.addIceCandidate(
+      new RTCIceCandidate(candidate)
+    );
+
+  } catch (error) {
+
+    console.warn(
+      "ICE candidate error",
+      error
+    );
+  }
+}
+
+function stopRemoteScreen() {
+
+  if (peer) {
+    peer.close();
+    peer = null;
+  }
+
+  screenVideo.srcObject = null;
+
+  screenStatus.textContent =
+    L.stopped;
+}
+
+</script>
+
+</body>
+</html>
